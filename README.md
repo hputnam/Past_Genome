@@ -1,0 +1,2 @@
+# README
+# Porites astreoides genome
