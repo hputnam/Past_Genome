@@ -19,13 +19,14 @@
 
 Citation:
 
-![assembly_pipeline_example](https://github.com/hputnam/Past_Genome/images/assembly_pipeline_example.JPG "assembly_pipeline_example")
+![assembly_pipeline_example](https://samgurr.github.io/SamJGurr_Lab_Notebook/images/assembly_pipeline_example.JPG "assembly_pipeline_example")
 
 * et al. ####* <URL here>
 
 Citation:
 
-![assembly_pipeline_example_2](https://github.com/hputnam/Past_Genome/images/assembly_pipeline_example_2.JPG "assembly_pipeline_example_2")
+![assembly_pipeline_example_2](https://samgurr.github.io/SamJGurr_Lab_Notebook/images/assembly_pipeline_example_2.JPG "assembly_pipeline_example_2")
+
 
 -------
 
@@ -57,7 +58,7 @@ Citation:
 - below is an image of a *de Bruijn* graph
   - this simplified example shows a contructed sequence by splitting into k-mers (k=7 or 7-mers) that connect to form the putative sequence assembly with an overlap of 6 nt or k-1
 
-![debruijn_graph](https://github.com/hputnam/Past_Genome/images/debruijn_graph.JPG "debruijn_graph")
+![debruijn_graph](https://samgurr.github.io/SamJGurr_Lab_Notebook/images/debruijn_graph.JPG "debruijn_graph")
 
 #### Trinity shell script  *(not tested!)*:
 
@@ -98,7 +99,7 @@ Citation:
 
 Citation: Theissinger, K., Falckenhayn, C., Blande, D., Toljamo, A., Gutekunst, J., Makkonen, J., ... & Kokko, H. (2016). De Novo assembly and annotation of the freshwater crayfish Astacus astacus transcriptome. Marine Genomics, 28, 7-10.
 
-![busco_analysis](https://github.com/hputnam/Past_Genome/images/busco_analysis.JPG "busco_analysis")
+![busco_analysis](https://samgurr.github.io/SamJGurr_Lab_Notebook/images/busco_analysis.JPG "busco_analysis")
 
 
 #### Orthofinder
@@ -110,7 +111,8 @@ Altenhoff, A. M., Levy, J., Zarowiecki, M., Tomiczek, B., Vesztrocy, A. W., Dalq
 
 - authors found Orthofinder detected more othologous groups than other methods...
 
-![assembly_completeness_fig](https://github.com/hputnam/Past_Genome/images/assembly_completeness_fig.JPG "assembly_completeness_fig")
+![assembly_completeness_fig](https://samgurr.github.io/SamJGurr_Lab_Notebook/images/assembly_completeness_fig.JPG "assembly_completeness_fig")
+
 
 #### Alignment to related species transcriptome(s)
  - Publicly available transcriptomes available on NCBI:
