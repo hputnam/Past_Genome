@@ -2,9 +2,9 @@
 - descrition of the structrual and functional features of the assembled genome
 - need to generate the Ab initio and experimental support for the annotation
 
-# MAKER
+# MAKER2
 - Genome annotation pipeline  
-[MAKER citation](https://genome.cshlp.org/content/18/1/188)  
+[MAKER2 citation](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-12-491)  
 [MAKER homepage](https://www.yandell-lab.org/software/maker.html)  
 [MAKER tutorial](http://weatherby.genetics.utah.edu/MAKER/wiki/index.php/MAKER_Tutorial_for_WGS_Assembly_and_Annotation_Winter_School_2018)  
 
@@ -29,4 +29,7 @@
 # RepeatMasker
 - Screens genomes against the TE content
 [ReeatMasker homepage](http://www.repeatmasker.org/)
+
+# SNAP
+
 
