@@ -17,7 +17,8 @@
 # AUGUSTUS
 - predicts genes in eukaryotes
 [AUGUSTUS citation](https://academic.oup.com/bioinformatics/article/24/5/637/202844)  
-[AUGUSTUS homepage](http://bioinf.uni-greifswald.de/augustus/)  
+[AUGUSTUS homepage - new](http://bioinf.uni-greifswald.de/webaugustus/index)      
+[AUGUSTUS homepage - old](http://bioinf.uni-greifswald.de/augustus/)  
 [AUGUSTUS github](https://github.com/Gaius-Augustus/Augustus)  
 
 
