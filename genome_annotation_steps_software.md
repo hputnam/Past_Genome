@@ -38,4 +38,10 @@
 [SNAP user manual](http://snap.cs.berkeley.edu/downloads/snap-1.0beta-manual.pdf)  
 [SNAP github](https://github.com/amplab/snap) 
 
+# InterProScan
+- Integrates info about protein families/functions to predict domains and important sites   
+[InterProScan citation](https://academic.oup.com/bioinformatics/article/30/9/1236/237988)  
+[InterPro homepage](https://www.ebi.ac.uk/interpro/)   
+[InterProScan github](https://github.com/ebi-pf-team/interproscan/wiki)
+
 
