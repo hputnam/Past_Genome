@@ -299,6 +299,8 @@ grep FAIL fastqc_summaries.txt | wc -l
 ## 3.1 Methods and tools to test
 
 #### BUSCO ( Benchmarking Universal Single-Copy Orthologs)
+
+- *Commands and overview for running BUSCO here*: https://busco.ezlab.org/busco_userguide.html
 - uses highly conserved single-copy orthologs; evolutionary informed expectations of gene content.
 - appears that youu can focus a BUSCO analysis to orthologs related to your target taxa.
 
