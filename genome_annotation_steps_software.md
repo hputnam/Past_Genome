@@ -44,4 +44,10 @@
 [InterPro homepage](https://www.ebi.ac.uk/interpro/)   
 [InterProScan github](https://github.com/ebi-pf-team/interproscan/wiki)
 
-
+# BLAST - Basic Local Alignment Search Tool 
+- Compares biological sequence information  
+[BLAST homepage](https://blast.ncbi.nlm.nih.gov/Blast.cgi)  
+[BLAST citation](https://pubmed.ncbi.nlm.nih.gov/2231712)  
+[BLAST user manual](https://www.ncbi.nlm.nih.gov/books/NBK279690/pdf/Bookshelf_NBK279690.pdf)  
+[BLAST NCBI handbook](https://www.ncbi.nlm.nih.gov/books/NBK153387/)                     											
+Lots of BLAST info out there
