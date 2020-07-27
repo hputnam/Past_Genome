@@ -31,3 +31,11 @@
 - Screens genomes against the TE content
 [ReeatMasker homepage](http://www.repeatmasker.org/)
 
+# SNAP - Scalable Nucleotide Alignment Program 
+- Fast and accurate aligner for DNA reads   
+[SNAP citation](https://arxiv.org/abs/1111.5572)  
+[SNAP homepage](http://snap.cs.berkeley.edu/#publications)   
+[SNAP user manual](http://snap.cs.berkeley.edu/downloads/snap-1.0beta-manual.pdf)  
+[SNAP github](https://github.com/amplab/snap) 
+
+
