@@ -317,24 +317,33 @@ grep FAIL fastqc_summaries.txt | wc -l
 
 #### Trinity shell script  *(not tested!)*:
 
-##### PHASE 1 Trinity
+```
+#!/bin/bash
 
-      #!/bin/bash
-      #SBATCH -t 30:00:00
-      #SBATCH --nodes=1 --ntasks-per-node=1
-      #SBATCH --export=NONE
-      #SBATCH --account=putnamlab
-      #SBATCH --output=trinity_out
-      #SBATCH --job-name=trinity-phase1
-      #SBATCH --mem=220G             # maximum memory available to Trinity
-      #SBATCH --partition=bigmem    # based on memory requirements
-      #SBATCH --hint=nomultithread  # disable hyper-threading
-      #SBATCH -D /data/putnamlab/<your folder>
+#SBATCH --job-name="Trinity_clean_P.ast"
+#SBATCH -t 100:00:00
+#SBATCH --nodes=1 --ntasks-per-node=20
+#SBATCH --export=NONE
+#SBATCH --output=../../trinity_out/"%x_out.%j"
+#SBATCH --error=../../trinity_out/"%x_err.%j"
+#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-user=samuel_gurr@uri.edu
+#SBATCH --account=putnamlab
+#SBATCH --mem=220GB
+#SBATCH -D /data/putnamlab/sgurr/P.astreoides_assembly_proj/output/fastp_out/clean/
 
-      module load <trininty package here: i.e. Trinity/2.8.4-foss-2016b>
+module load Trinity/2.8.4-foss-2016b
+module load SAMtools/1.3.1-foss-2016b
+module load Jellyfish/2.2.6-foss-2016b
+module load Salmon/0.10.2-foss-2016b-Python-2.7.12
 
-      # run trinity, stop before phase 2
-      srun Trinity --seqType <insert file type; i.e. fq> --left <path to forward.fq> --right <reverse.fq> --CPU 6 --max_memory 220G
+fwd_array=($(ls *R1.fastq.gz))
+rev_array=($(ls *R2.fastq.gz))
+
+for ((i = 0; i < ${#fwd_array[@]} && i < ${#rev_array[@]}; i++)); do
+      Trinity --seqType fq --left ${fwd_array[i]} --right ${rev_array[i]} --CPU 20 --max_memory 220G --full_cleanup
+done
+```
 
 # 3. Assembly completeness
 
