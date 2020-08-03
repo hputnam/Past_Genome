@@ -154,6 +154,35 @@ https://github.com/OpenGene/fastp
 
 ```nano fastp.sh```
 
+# loop fastp through left and right sequences; used the tutorial here: https://bash.programmingpedia.net/en/knowledge-base/11215088/bash-shell-script-two-variables-in-for-loop
+
+```
+#!/bin/bash
+
+#SBATCH --job-name="fastp_raw_P.ast"
+#SBATCH -t 100:00:00
+#SBATCH --nodes=1 --ntasks-per-node=20
+#SBATCH --export=NONE
+#SBATCH --output=../../../sgurr/P.astreoides_assembly_proj/output/fastp_out/test/"%x_out.%j"
+#SBATCH --error=../../../sgurr/P.astreoides_assembly_proj/output/fastp_out/test/"%x_err.%j"
+#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-user=samuel_gurr@uri.edu
+#SBATCH --account=putnamlab
+#SBATCH -D /data/putnamlab/KITT/hputnam/20191010_Past_ubertrans
+
+module load fastp/0.19.7-foss-2018b
+
+fwd_array=($(ls *R1.fastq.gz))
+rev_array=($(ls *R2.fastq.gz))
+
+for ((i = 0; i < ${#fwd_array[@]} && i < ${#rev_array[@]}; i++)); do
+   fastp --in1 ${fwd_array[i]} --in2 ${rev_array[i]} --out1 ../../../sgurr/P.astreoides_assembly_proj/output/fastp_out/test/clean/clean.${fwd_array[i]} --out2 ../../../sgurr/P.astreoides_assembly_proj/output/fastp_out/test/clean/clean.${rev_array[i]} --cut_front 20 --cut_tail 20  --cut_window_size 5 --trim_front1 3  cut_mean_quality 30 -q 30  --adapter_sequence=AGATCGGAAGAGCACACGTCTGAACTCCAGTCA --adapter_sequence_r2=AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT --json ../../../sgurr/astreoides_assembly_proj/output/fastp_out/test/fastp.json  --html ../../../sgurr/P.astreoides_assembly_proj/output/fastp_out/test/fastp.html
+done
+
+echo -n "Finished fastp:"
+```
+
+
 ```
 #!/bin/bash
 
@@ -183,15 +212,32 @@ for filename in *.fastq.gz
 Count the reads before and after trimming to compare the reduction in size
 
 Raw reads:
+# original raw reads from /data/putnamlab/KITT/hputnam/20191010_Past_ubertrans
 ```
-zgrep -c *.fastq.gz
+zgrep -c "@C" *.fastq.gz 
 ```
+Sample2_R1.fastq.gz:9869330
+Sample2_R2.fastq.gz:9869330
+Sample3_R1.fastq.gz:8471009
+Sample3_R2.fastq.gz:8471009
+Sample4_R1.fastq.gz:8244565
+Sample4_R2.fastq.gz:8244565
+Sample5_R1.fastq.gz:8920953
+Sample5_R2.fastq.gz:8920953
 
 Cleaned reads:
+# titled 'clean' after the fastp job above
 ```
-zgrep -c *.fastq.cleaned.gz
+zgrep -c "@C" *.fastq.cleaned.gz
 ```
-
+clean.Sample2_R1.fastq.gz:8726675
+clean.Sample2_R2.fastq.gz:8726675
+clean.Sample3_R1.fastq.gz:7255348
+clean.Sample3_R2.fastq.gz:7255348
+clean.Sample4_R1.fastq.gz:7237699
+clean.Sample4_R2.fastq.gz:7237699
+clean.Sample5_R1.fastq.gz:7673755
+clean.Sample5_R2.fastq.gz:7673755
 
 ## 1.5 Quality control of trimmed sequencing reads (FASTQC)
 
