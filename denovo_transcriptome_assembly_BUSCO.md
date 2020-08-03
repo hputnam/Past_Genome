@@ -45,12 +45,6 @@ Current files:
 
 ## 1.1 Checking the files downloaded correctly (cksum)
 
-Uploading files from an external hard drive to Bluewaves
-```
-scp -r /Volumes/KWong_Hardrive_2/Porites_Ref_Transcriptomes/ kevin_wong1@bluewaves.uri.edu:/data/putnamlab/kwong/P.astreoides_transcriptome_genome/raw_files/
-cd data/putnamlab/kwong/P.astreoides_transcriptome_genome/raw_files/Porites_Ref_Transcriptomes/
-```
-
 For small jobs in Bluewave, turn on "interactive mode"
 
 ```
@@ -60,13 +54,13 @@ interactive
 Create a seccondary md5 file with uploaded files to compare to original md5
 
 ```
-md5sum *.fastq.gz > Past2.md5
+md5sum *.fastq.gz > Past_20200729.md5
 ```
 
 Use 'cksum' to compare md5 files
 
 ```
-cksum Past.md5 Past2.md5
+cksum Past.md5 Past_20200729.md5
 ```
 
 The output should look like this:
@@ -78,6 +72,37 @@ The output should look like this:
 The first number is the cksum ID and the second number is the size of the file (in bytes).
 Since both files are the same, this suggests the transfer of files did not corrupt any of the files.
 
+```
+less Past.md5
+```
+
+```
+c9251a9b98768edd205724ed12c1c2a8  Sample2_R1.fastq.gz
+21139f87ce4d0f4b293059a0020122e1  Sample2_R2.fastq.gz
+173692a008fef82c0aecd55890eb985c  Sample3_R1.fastq.gz
+962cf69dfcd1384c7f7ce3a792454ab6  Sample3_R2.fastq.gz
+adf57023019e4c07fc8e5627db0faad7  Sample4_R1.fastq.gz
+680ac6e4b9c4fead8f2f7a195b14dd79  Sample4_R2.fastq.gz
+63c622d7c0e7093b537d0f3efd3c48c4  Sample5_R1.fastq.gz
+4df8c11d45958e9081aead7d40a9386a  Sample5_R2.fastq.gz
+```
+
+```
+less Past_20200729.md5
+```
+
+```
+c9251a9b98768edd205724ed12c1c2a8  Sample2_R1.fastq.gz
+21139f87ce4d0f4b293059a0020122e1  Sample2_R2.fastq.gz
+173692a008fef82c0aecd55890eb985c  Sample3_R1.fastq.gz
+962cf69dfcd1384c7f7ce3a792454ab6  Sample3_R2.fastq.gz
+adf57023019e4c07fc8e5627db0faad7  Sample4_R1.fastq.gz
+680ac6e4b9c4fead8f2f7a195b14dd79  Sample4_R2.fastq.gz
+63c622d7c0e7093b537d0f3efd3c48c4  Sample5_R1.fastq.gz
+4df8c11d45958e9081aead7d40a9386a  Sample5_R2.fastq.gz
+```
+
+Looks the same.
 
 Don't forget to exit interactive mode!
 ```
@@ -111,9 +136,9 @@ nano fastqc_raw.sh
 #SBATCH --output="%x_out.%j"
 #SBATCH --error="%x_err.%j"
 #SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user=kevin_wong1@uri.edu
+#SBATCH --mail-user==<EMAIL@BLUEWAVES.URI.EDU>
 #SBATCH --account=putnamlab
-#SBATCH -D /data/putnamlab/kwong/P.astreoides_transcriptome_genome/raw_files/Porites_Ref_Transcriptomes/
+#SBATCH -D /<FILEPATH.TO.RAW.TRANSCRIPTOMES>/
 
 module load FastQC/0.11.8-Java-1.8
 module load MultiQC/1.7-foss-2018b-Python-3.6.6
@@ -140,10 +165,7 @@ sbatch fastqc_raw.sh
 
 Export the MultiQC report to view. It should be an HTML file.
 ```
-scp -r  kevin_wong1@bluewaves.uri.edu:/data/putnamlab/kwong/P.astreoides_transcriptome_genome/fastqc_results/multiqc_report.html /Users/kevinwong/Documents/MyProjects/Past_Genome/output/
-
-cat */summary.txt > /Users/kevinwong/Documents/MyProjects/P.astreoides_Transcriptome_Assembly/Output/fastqc_summaries.txt
-grep FAIL fastqc_summaries.txt | wc -l
+scp -r  <EMAIL@BLUEWAVES.URI.EDU>:/<BLUEWAVES.FILEPATH>/multiqc_report.html /<COMPUTER.FILEPATH>/
 ```
 
 
@@ -166,9 +188,9 @@ https://github.com/OpenGene/fastp
 #SBATCH --output=../../../sgurr/P.astreoides_assembly_proj/output/fastp_out/test/"%x_out.%j"
 #SBATCH --error=../../../sgurr/P.astreoides_assembly_proj/output/fastp_out/test/"%x_err.%j"
 #SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user=samuel_gurr@uri.edu
+#SBATCH --mail-user=<EMAIL@BLUEWAVES.URI.EDU>
 #SBATCH --account=putnamlab
-#SBATCH -D /data/putnamlab/KITT/hputnam/20191010_Past_ubertrans
+#SBATCH -D /<FILEPATH.TO.RAW.TRANSCRIPTOMES>
 
 module load fastp/0.19.7-foss-2018b
 
@@ -193,9 +215,9 @@ echo -n "Finished fastp:"
 #SBATCH --output="%x_out.%j"
 #SBATCH --error="%x_err.%j"
 #SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user=kevin_wong1@uri.edu
+#SBATCH --mail-user==<EMAIL@BLUEWAVES.URI.EDU>
 #SBATCH --account=putnamlab
-#SBATCH -D /data/putnamlab/kwong/P.astreoides_transcriptome_genome/raw_files/Porites_Ref_Transcriptomes/
+#SBATCH -D /<FILEPATH.TO.RAW.TRANSCRIPTOMES>/
 
 module load FastQC/0.11.8-Java-1.8
 module load MultiQC/1.7-foss-2018b-Python-3.6.6
@@ -214,7 +236,7 @@ Count the reads before and after trimming to compare the reduction in size
 Raw reads:
 # original raw reads from /data/putnamlab/KITT/hputnam/20191010_Past_ubertrans
 ```
-zgrep -c "@C" *.fastq.gz 
+zgrep -c "@C" *.fastq.gz
 ```
 Sample2_R1.fastq.gz:9869330
 Sample2_R2.fastq.gz:9869330
@@ -264,9 +286,9 @@ nano fastqc_clean.sh
 #SBATCH --output="%x_out.%j"
 #SBATCH --error="%x_err.%j"
 #SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user=kevin_wong1@uri.edu
+#SBATCH --mail-user==<EMAIL@BLUEWAVES.URI.EDU>
 #SBATCH --account=putnamlab
-#SBATCH -D /data/putnamlab/kwong/P.astreoides_transcriptome_genome/raw_files/Porites_Ref_Transcriptomes/cleaned_reads
+#SBATCH -D /<FILEPATH.TO.RAW.TRANSCRIPTOMES>/
 
 module load FastQC/0.11.8-Java-1.8
 module load MultiQC/1.7-foss-2018b-Python-3.6.6
@@ -280,10 +302,8 @@ echo -n "Finished multiqc:"
 
 Export the MultiQC report to view. It should be an HTML file.
 ```
-scp -r  kevin_wong1@bluewaves.uri.edu:/data/putnamlab/kwong/P.astreoides_transcriptome_genome/cleaned_reads/multiqc_report.html /Users/kevinwong/Documents/MyProjects/Past_Genome/output/
+scp -r  <EMAIL@BLUEWAVES.URI.EDU>:/<BLUEWAVES.FILEPATH>/multiqc_report.html /<COMPUTER.FILEPATH>/
 
-cat */summary.txt > /Users/kevinwong/Documents/MyProjects/P.astreoides_Transcriptome_Assembly/Output/fastqc_summaries.txt
-grep FAIL fastqc_summaries.txt | wc -l
 ```
 
 
@@ -392,7 +412,7 @@ Altenhoff, A. M., Levy, J., Zarowiecki, M., Tomiczek, B., Vesztrocy, A. W., Dalq
 # 4. Annotate the assembly
 
 - *Commands and overview for running Trinotate here*: https://github.com/Trinotate/Trinotate.github.io/wiki
-- *in summary...* the Trinotate package uses a variety of well-referenced methods and databases for a holistic annotation of your assembly (i.e. protein domain identification, functional annotation, etc.) 
+- *in summary...* the Trinotate package uses a variety of well-referenced methods and databases for a holistic annotation of your assembly (i.e. protein domain identification, functional annotation, etc.)
 
 - What is gene ontology (GO) and how are 'GO terms' classified?
   - Describes the knowledge of the biological domain of genes with respect to three characteristics
