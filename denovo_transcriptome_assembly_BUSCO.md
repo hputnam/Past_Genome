@@ -198,43 +198,16 @@ fwd_array=($(ls *R1.fastq.gz))
 rev_array=($(ls *R2.fastq.gz))
 
 for ((i = 0; i < ${#fwd_array[@]} && i < ${#rev_array[@]}; i++)); do
-   fastp --in1 ${fwd_array[i]} --in2 ${rev_array[i]} --out1 ../../../sgurr/P.astreoides_assembly_proj/output/fastp_out/test/clean/clean.${fwd_array[i]} --out2 ../../../sgurr/P.astreoides_assembly_proj/output/fastp_out/test/clean/clean.${rev_array[i]} --cut_front 20 --cut_tail 20  --cut_window_size 5 --trim_front1 3  cut_mean_quality 30 -q 30  --adapter_sequence=AGATCGGAAGAGCACACGTCTGAACTCCAGTCA --adapter_sequence_r2=AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT --json ../../../sgurr/astreoides_assembly_proj/output/fastp_out/test/fastp.json  --html ../../../sgurr/P.astreoides_assembly_proj/output/fastp_out/test/fastp.html
+   fastp --in1 ${fwd_array[i]} --in2 ${rev_array[i]} --out1 <FILEPATH.FOR.CLEAN.FWD.OUTPUT>/clean.${fwd_array[i]} --out2 <FILEPATH.FOR.CLEAN.REV.OUTPUT>/clean.${rev_array[i]} --cut_front 20 --cut_tail 20  --cut_window_size 5 --trim_front1 3  cut_mean_quality 30 -q 30  --adapter_sequence=AGATCGGAAGAGCACACGTCTGAACTCCAGTCA --adapter_sequence_r2=AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT --json <FILEPATH.FOR.JSON.OUTPUT>  --html <FILEPATH.FOR.HTML.OUTPUT>
 done
 
 echo -n "Finished fastp:"
 ```
 
-
-```
-#!/bin/bash
-
-#SBATCH --job-name="fastp_raw_P.ast"
-#SBATCH -t 100:00:00
-#SBATCH --nodes=1 --ntasks-per-node=20
-#SBATCH --export=NONE
-#SBATCH --output="%x_out.%j"
-#SBATCH --error="%x_err.%j"
-#SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user==<EMAIL@BLUEWAVES.URI.EDU>
-#SBATCH --account=putnamlab
-#SBATCH -D /<FILEPATH.TO.RAW.TRANSCRIPTOMES>/
-
-module load FastQC/0.11.8-Java-1.8
-module load MultiQC/1.7-foss-2018b-Python-3.6.6
-
-for filename in *.fastq.gz
-> do
-> fastp --in1 ${filename} --out1 ${filename}.clean \
-> --cut_front 20 --cut_tail 20 --cut_window_size 5 \
-> --cut_mean_quality 15 -q 15 -w 16 --trim_front1 14 \
-> --adapter_sequence=AGATCGGAAGAGCACACGTCTGAACTCCAGTCA --adapter_sequence_r2=AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT
-> done
-```
-
 Count the reads before and after trimming to compare the reduction in size
 
-Raw reads:
-# original raw reads from /data/putnamlab/KITT/hputnam/20191010_Past_ubertrans
+### Raw reads:
+#### original raw reads from /data/putnamlab/KITT/hputnam/20191010_Past_ubertrans
 ```
 zgrep -c "@C" *.fastq.gz
 ```
@@ -247,8 +220,8 @@ Sample4_R2.fastq.gz:8244565
 Sample5_R1.fastq.gz:8920953
 Sample5_R2.fastq.gz:8920953
 
-Cleaned reads:
-# titled 'clean' after the fastp job above
+### Cleaned reads:
+#### titled 'clean' after the fastp job above
 ```
 zgrep -c "@C" *.fastq.cleaned.gz
 ```
@@ -286,7 +259,7 @@ nano fastqc_clean.sh
 #SBATCH --output="%x_out.%j"
 #SBATCH --error="%x_err.%j"
 #SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user==<EMAIL@BLUEWAVES.URI.EDU>
+#SBATCH --mail-user=<EMAIL@BLUEWAVES.URI.EDU>
 #SBATCH --account=putnamlab
 #SBATCH -D /<FILEPATH.TO.RAW.TRANSCRIPTOMES>/
 
@@ -347,10 +320,10 @@ scp -r  <EMAIL@BLUEWAVES.URI.EDU>:/<BLUEWAVES.FILEPATH>/multiqc_report.html /<CO
 #SBATCH --output=../../trinity_out/"%x_out.%j"
 #SBATCH --error=../../trinity_out/"%x_err.%j"
 #SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user=samuel_gurr@uri.edu
+#SBATCH --mail-user=<EMAIL@BLUEWAVES.URI.EDU>
 #SBATCH --account=putnamlab
 #SBATCH --mem=220GB
-#SBATCH -D /data/putnamlab/sgurr/P.astreoides_assembly_proj/output/fastp_out/clean/
+#SBATCH -D /<FILEPATH.TO.CLEAN.TRANSCRIPTOMES>/
 
 module load Trinity/2.8.4-foss-2016b
 module load SAMtools/1.3.1-foss-2016b
