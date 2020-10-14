@@ -131,3 +131,59 @@ The query was compared to classified sequences in "consensi.fa.classified"
 
 
 ```
+
+As a comparison P.dam tbl is pasted below which seems to have less total % of bases masked but the genome size is smaller than P.ast. This can be found at https://github.com/jrcunning/pdam-genome/blob/master/annotation/repeatmasker/pdam.fasta.tbl 
+
+```shell
+==================================================
+file name: pdam.fasta               
+sequences:          4393
+total length:  234335492 bp  (225829454 bp excl N/X-runs)
+GC level:         37.82 %
+bases masked:   47590570 bp ( 20.31 %)
+==================================================
+               number of      length   percentage
+               elements*    occupied  of sequence
+--------------------------------------------------
+SINEs:            15392      2256985 bp    0.96 %
+      ALUs            0            0 bp    0.00 %
+      MIRs         5696       929945 bp    0.40 %
+
+LINEs:            24932      4726566 bp    2.02 %
+      LINE1          70        23309 bp    0.01 %
+      LINE2        3258       861391 bp    0.37 %
+      L3/CR1        419       111785 bp    0.05 %
+
+LTR elements:      3729       911156 bp    0.39 %
+      ERVL            0            0 bp    0.00 %
+      ERVL-MaLRs      0            0 bp    0.00 %
+      ERV_classI      0            0 bp    0.00 %
+      ERV_classII     0            0 bp    0.00 %
+
+DNA elements:     29695      5460374 bp    2.33 %
+     hAT-Charlie      0            0 bp    0.00 %
+     TcMar-Tigger   357        62651 bp    0.03 %
+
+Unclassified:    169654     31492126 bp   13.44 %
+
+Total interspersed repeats: 44847207 bp   19.14 %
+
+
+Small RNA:         2316       279044 bp    0.12 %
+
+Satellites:         316        48352 bp    0.02 %
+Simple repeats:   40131      2365345 bp    1.01 %
+Low complexity:    7534       378443 bp    0.16 %
+==================================================
+
+* most repeats fragmented by insertions or deletions
+  have been counted as one element
+                                                      
+
+The query species was assumed to be homo          
+RepeatMasker Combined Database: Dfam_Consensus-20170127, RepBase-20170127
+        
+run with rmblastn version 2.2.27+
+The query was compared to classified sequences in "consensi.fa.classified"
+
+```
