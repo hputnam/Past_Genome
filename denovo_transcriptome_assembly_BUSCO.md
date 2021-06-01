@@ -465,3 +465,22 @@ Transcript Counts:
   --export query=/data/putnamlab/kevin_wong1/20201221_P.astreoides_Ref_Transcriptome/psytrans/species1_trinity_out_dir.Trinity.fasta  \
   /data/putnamlab/kevin_wong1/scripts/run-busco-transcriptome.sh
   ```
+  
+  ```
+# BUSCO version is: 4.0.6
+# The lineage dataset is: metazoa_odb10 (Creation date: 2019-11-20, number of species: 65, number of BUSCOs: 954)
+# Summarized benchmarking in BUSCO notation for file /data/putnamlab/kevin_wong1/20201221_P.astreoides_Ref_Transcriptome/psytrans/species1_$
+# BUSCO was run in mode: transcriptome
+
+        ***** Results: *****
+
+        C:21.2%[S:13.5%,D:7.7%],F:36.5%,M:42.3%,n:954
+        202     Complete BUSCOs (C)
+        129     Complete and single-copy BUSCOs (S)
+        73	Complete and duplicated BUSCOs (D)
+        348     Fragmented BUSCOs (F)
+        404     Missing BUSCOs (M)
+        954     Total BUSCO groups searched
+```
+
+
