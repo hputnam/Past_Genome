@@ -320,6 +320,46 @@ perl /opt/software/Trinity/2.9.1-foss-2019b-Python-3.7.4/trinityrnaseq-v2.9.1/ut
 
 ```
 
+```
+################################
+## Counts of transcripts, etc.
+################################
+Total trinity 'genes':  431885
+Total trinity transcripts:	687749
+Percent GC: 39.50
+
+########################################
+Stats based on ALL transcript contigs:
+########################################
+
+        Contig N10: 3573
+        Contig N20: 2432
+        Contig N30: 1824
+        Contig N40: 1410
+        Contig N50: 1094
+
+        Median contig length: 454
+        Average contig: 742.94
+        Total assembled bases: 510954452
+
+
+#####################################################
+## Stats based on ONLY LONGEST ISOFORM per 'GENE':
+#####################################################
+
+        Contig N10: 3394
+        Contig N20: 2341
+        Contig N30: 1758
+        Contig N40: 1357
+        Contig N50: 1049
+
+        Median contig length: 433
+        Average contig: 713.17
+        Total assembled bases: 308007563
+
+```
+
+
 # 3. Assembly completeness
 
 #### BUSCO ( Benchmarking Universal Single-Copy Orthologs)
@@ -408,4 +448,20 @@ Input
   python psytrans.py -A ../../REFS/Plutea/plut2v1.1.proteins.fasta -B ../../REFS/symA/syma_aug_37.aa.longest.fa -p 20 -t tempDir ../trinity_2/trinity_out_dir.Trinity.fasta
 
   echo "Mission complete!" $(date)
+  ```
+
+Transcript Counts:
+- Holobiont: 1375498
+- Host: 1310924
+- Symbiont: 64574
+
+
+### BUSCO on just psytrans output of species 1 (host)
+
+  *note: run this on bluewaves
+
+  ```
+  sbatch -o ~/%u-%x.%j.out -e ~/%u-%x.%j.err --mail-type=BEGIN,END,FAIL --mail-user=kevin_wong1@uri.edu \
+  --export query=/data/putnamlab/kevin_wong1/20201221_P.astreoides_Ref_Transcriptome/psytrans/species1_trinity_out_dir.Trinity.fasta  \
+  /data/putnamlab/kevin_wong1/scripts/run-busco-transcriptome.sh
   ```
