@@ -2,6 +2,12 @@
 - descrition of the structrual and functional features of the assembled genome
 - need to generate the Ab initio and experimental support for the annotation
 
+
+# de novo transcriptome assembly
+- assembly
+- annotation
+
+
 # MAKER2
 - Genome annotation pipeline  
 [MAKER2 citation](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-12-491)  

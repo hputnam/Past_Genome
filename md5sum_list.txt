@@ -1,0 +1,12 @@
+fbf9f3f1c9044afeb2305a10612c0aa0  ./analysis/filtered_p_ctg_ORF_nucleotide.fa
+6fa939de3a1c469eb27908c5e5b9d1d2  ./analysis/filtered_p_ctg_ORF_nucleotide.tsv
+ac1470aa6d51a3ab0615f26227a2b95a  ./analysis/filtered_p_ctg_ORF_protein_Diamond_BLASTp.tsv
+260abee1bc01dc15b24e4f557b512af8  ./analysis/filtered_p_ctg_ORF_protein.fa
+4678451e7b05c84b326efed908f0f88c  ./analysis/filtered_p_ctg_ORF_protein.tsv
+24525a00d98f9da8cf4fd814f2e91fde  ./analysis/unfiltered_p_ctg_ORF_nucleotide.fa
+0f33835cbe92db2c541fafe8e8e9d35c  ./analysis/unfiltered_p_ctg_ORF_nucleotide.tsv
+46a892a074f487222e57dc14cb821679  ./analysis/unfiltered_p_ctg_ORF_protein_Diamond_BLASTp.tsv
+a3bc25b72d3e812656f8b6055d7a9817  ./analysis/unfiltered_p_ctg_ORF_protein.fa
+46d762c8f5cb6ddf2859669b348b7c00  ./analysis/unfiltered_p_ctg_ORF_protein.tsv
+f5a5612f06c273012e0bbc9660ec894d  ./assembly/filtered_p_ctg.fasta
+5ef5beef9d7bec171e36017c383991e9  ./assembly/unfiltered_p_ctg.fasta

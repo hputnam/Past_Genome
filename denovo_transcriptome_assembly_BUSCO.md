@@ -36,12 +36,12 @@ Current files:
 - Sample2_R1.fastq.gz
 - Sample2_R2.fastq.gz
 - Sample3_R1.fastq.gz
-- Sample3_R2.fastq.gz  
+- Sample3_R2.fastq.gz
 - Sample4_R1.fastq.gz
 - Sample4_R2.fastq.gz
 - Sample5_R1.fastq.gz
 - Sample5_R2.fastq.gz
-- Past.md5                       
+- Past.md5
 
 ## 1.1 Checking the files downloaded correctly (cksum)
 
@@ -335,3 +335,14 @@ Altenhoff, A. M., Levy, J., Zarowiecki, M., Tomiczek, B., Vesztrocy, A. W., Dalq
 -------
 
 # 4. Annotate the assembly
+
+- *Commands and overview for running Trinotate here*: https://github.com/Trinotate/Trinotate.github.io/wiki
+- *in summary...* the Trinotate package uses a variety of well-referenced methods and databases for a holistic annotation of your assembly (i.e. protein domain identification, functional annotation, etc.) 
+
+- What is gene ontology (GO) and how are 'GO terms' classified?
+  - Describes the knowledge of the biological domain of genes with respect to three characteristics
+    - 1) **molecular function** – represents the activates not the entities or when, when, or what context the action takes place. Correspond to the activities that can be performed by individual gene products or complexes formed by multiple gene products (i.e. GO term for molecular function protein kinase activity)
+    - 2)  **cellular component** – refers to the cellular anatomy; locations where the gene products perform the function (i.e. mitochondrion, ribosome)
+    - 3) **biological process** – the complex ‘biological programs’ accomplished from multiple activities (i.e. DNA repair, signal transduction, beta metabolism)
+
+- here is an example of *de novo* analysis of a coral transcriptome in 2009 (Meyer et al. 2009) https://link.springer.com/article/10.1186/1471-2164-10-219; note that UniProt was the main database used for their annotation - **Trinotate** allows a more comprehensive annotation with a variety of tools!
