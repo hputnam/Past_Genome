@@ -265,31 +265,46 @@ cat *R2.fastq.gz > clean.Sample_ALL_R2.fastq.gz
 #### Trinity shell script:
 
 ```
-nano trinity.sh
+nano sample_list.txt
+```
+
+```
+Sample2 S2       /data/putnamlab/kevin_wong1/20201221_P.astreoides_Ref_Transcriptome/cleaned_reads/clean.Sample2_R1.fastq.gz    /data/putnamlab/kevin_wong1/20201221_P.astreoides_Ref_Transcriptome/cleaned_reads/clean.Sample2_R2.fastq.gz
+Sample3 S3       /data/putnamlab/kevin_wong1/20201221_P.astreoides_Ref_Transcriptome/cleaned_reads/clean.Sample3_R1.fastq.gz    /data/putnamlab/kevin_wong1/20201221_P.astreoides_Ref_Transcriptome/cleaned_reads/clean.Sample3_R2.fastq.gz
+Sample4 S4       /data/putnamlab/kevin_wong1/20201221_P.astreoides_Ref_Transcriptome/cleaned_reads/clean.Sample4_R1.fastq.gz    /data/putnamlab/kevin_wong1/20201221_P.astreoides_Ref_Transcriptome/cleaned_reads/clean.Sample4_R2.fastq.gz
+Sample5 S5       /data/putnamlab/kevin_wong1/20201221_P.astreoides_Ref_Transcriptome/cleaned_reads/clean.Sample5_R1.fastq.gz    /data/putnamlab/kevin_wong1/20201221_P.astreoides_Ref_Transcriptome/cleaned_reads/clean.Sample5_R2.fastq.gz
+Samplei10 iS10   /data/putnamlab/kevin_wong1/Past_Ref_Transcriptome_Illumina/raw_reads/S10_R1_all.fastq.gz      /data/putnamlab/kevin_wong1/Past_Ref_Transcriptome_Illumina/raw_reads/S10_R2_all.fastq.gz
+Samplei2 iS2     /data/putnamlab/kevin_wong1/Past_Ref_Transcriptome_Illumina/raw_reads/S2_R1_all.fastq.gz       /data/putnamlab/kevin_wong1/Past_Ref_Transcriptome_Illumina/raw_reads/S2_R2_all.fastq.gz
+```
+
+```
+nano trinity_20210707.sh
 ```
 
 ***note***: run this on andromeda
 
 ```
 #!/bin/bash
-
-#SBATCH --job-name="Trinity_clean_P.ast"
-#SBATCH -t 200:00:00
-#SBATCH --nodes=1 --ntasks-per-node=20
+#SBATCH --job-name="Trinity"
+#SBATCH -t 336:00:00
 #SBATCH --export=NONE
-#SBATCH --output="%x_out.%j"
-#SBATCH --error="%x_err.%j"
+#SBATCH --nodes=1 --ntasks-per-node=20
+#SBATCH --exclusive
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=kevin_wong1@uri.edu
-#SBATCH --account=putnamlab
+#SBATCH -D /data/putnamlab/kevin_wong1/20201221_P.astreoides_Ref_Transcriptome/trinity_20210707
 #SBATCH --mem=500GB
-#SBATCH --exclusive
-#SBATCH -D /data/putnamlab/kevin_wong1/20201221_P.astreoides_Ref_Transcriptome/trinity_2
+#SBATCH -q putnamlab
 
-module load Trinity/2.9.1-foss-2019b-Python-3.7.4
+module load Trinity/2.12.0-foss-2019b-Python-3.7.4
 
-Trinity --seqType fq --left ../cleaned_reads/clean.Sample_ALL_R1.fastq.gz  --right ../cleaned_reads/clean.Sample_ALL_R2.fastq.gz --CPU 20 --max_memory 500G --full_cleanup
+echo "Starting assembly" $(date)
+Trinity --cite
+Trinity --version
+Trinity --seqType fq --max_memory 125G --bflyCalculateCPU --CPU 10 --samples_file sample_list.txt --SS_lib_type RF --full_cleanup
 
+
+echo "Assembly complete!" $(date)
 ```
 
 ### Trinity Statistics
@@ -304,7 +319,7 @@ nano trinity_stats.sh
 #SBATCH --job-name="Trinity_stats"
 #SBATCH -t 200:00:00
 #SBATCH --nodes=1 --ntasks-per-node=20
-#SBATCH --export=NONE
+#SBATCH --export=/opt/software/Trinity/2.9.1-foss-2019b-Python-3.7.4/trinityrnaseq-v2.9.1
 #SBATCH --output="%x_out.%j"
 #SBATCH --error="%x_err.%j"
 #SBATCH --mail-type=BEGIN,END,FAIL
@@ -312,7 +327,7 @@ nano trinity_stats.sh
 #SBATCH --account=putnamlab
 #SBATCH --mem=500GB
 #SBATCH --exclusive
-#SBATCH -D /data/putnamlab/kevin_wong1/20201221_P.astreoides_Ref_Transcriptome/trinity_2
+#SBATCH -D /data/putnamlab/kevin_wong1/20201221_P.astreoides_Ref_Transcriptome/trinity_20210603
 
 module load Trinity/2.9.1-foss-2019b-Python-3.7.4
 
@@ -324,39 +339,38 @@ perl /opt/software/Trinity/2.9.1-foss-2019b-Python-3.7.4/trinityrnaseq-v2.9.1/ut
 ################################
 ## Counts of transcripts, etc.
 ################################
-Total trinity 'genes':  431885
-Total trinity transcripts:	687749
-Percent GC: 39.50
+Total trinity 'genes':  1067008
+Total trinity transcripts:	1331488
+Percent GC: 39.32
 
 ########################################
 Stats based on ALL transcript contigs:
 ########################################
 
-        Contig N10: 3573
-        Contig N20: 2432
-        Contig N30: 1824
-        Contig N40: 1410
-        Contig N50: 1094
+        Contig N10: 1633
+        Contig N20: 1107
+        Contig N30: 851
+        Contig N40: 683
+        Contig N50: 559
 
-        Median contig length: 454
-        Average contig: 742.94
-        Total assembled bases: 510954452
+        Median contig length: 362
+        Average contig: 490.77
+        Total assembled bases: 653454022
 
 
 #####################################################
 ## Stats based on ONLY LONGEST ISOFORM per 'GENE':
 #####################################################
 
-        Contig N10: 3394
-        Contig N20: 2341
-        Contig N30: 1758
-        Contig N40: 1357
-        Contig N50: 1049
+        Contig N10: 1394
+        Contig N20: 985
+        Contig N30: 772
+        Contig N40: 628
+        Contig N50: 520
 
-        Median contig length: 433
-        Average contig: 713.17
-        Total assembled bases: 308007563
-
+        Median contig length: 353
+        Average contig: 465.46
+        Total assembled bases: 496653225
 ```
 
 
@@ -379,7 +393,7 @@ Citation: Theissinger, K., Falckenhayn, C., Blande, D., Toljamo, A., Gutekunst, 
 
 ```
 sbatch -o ~/%u-%x.%j.out -e ~/%u-%x.%j.err --mail-type=BEGIN,END,FAIL --mail-user=kevin_wong1@uri.edu \
---export query=/data/putnamlab/kevin_wong1/20201221_P.astreoides_Ref_Transcriptome/trinity_2/trinity_out_dir.Trinity.fasta  \
+--export query=/data/putnamlab/kevin_wong1/20201221_P.astreoides_Ref_Transcriptome/trinity_20210603/trinity_out_dir.Trinity.fasta  \
 /data/putnamlab/kevin_wong1/scripts/run-busco-transcriptome.sh
 ```
 
@@ -465,7 +479,7 @@ Transcript Counts:
   --export query=/data/putnamlab/kevin_wong1/20201221_P.astreoides_Ref_Transcriptome/psytrans/species1_trinity_out_dir.Trinity.fasta  \
   /data/putnamlab/kevin_wong1/scripts/run-busco-transcriptome.sh
   ```
-  
+
   ```
 # BUSCO version is: 4.0.6
 # The lineage dataset is: metazoa_odb10 (Creation date: 2019-11-20, number of species: 65, number of BUSCOs: 954)
@@ -482,5 +496,3 @@ Transcript Counts:
         404     Missing BUSCOs (M)
         954     Total BUSCO groups searched
 ```
-
-
