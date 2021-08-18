@@ -1,6 +1,7 @@
 # *Porites astreoides* Genome Annotation
 
-## Overall Workflow:
+## <span style="color:blue">**Table of Contents**</span>
+
 1. [MAKER round 1](#1.-MAKER-Round-1)
 2. [MAKER round 2](#2.-MAKER-round-2)
 3. [BUSCO](#3.-BUSCO)
