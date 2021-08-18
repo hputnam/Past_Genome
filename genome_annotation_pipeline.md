@@ -1,10 +1,10 @@
 # *Porites astreoides* Genome Annotation
 
 ## Overall Workflow:
-1. [MAKER round 1](##1.-MAKER-Round-1)
-2. [MAKER round 2](##2.-MAKER-round-2)
-3. [BUSCO](##3.-BUSCO)
-4. [Functional Annotation](##4.-Functional-Annotation)
+1. [MAKER round 1](#1.-MAKER-Round-1)
+2. [MAKER round 2](#2.-MAKER-round-2)
+3. [BUSCO](#3.-BUSCO)
+4. [Functional Annotation](#4.-Functional-Annotation)
 
 ## 1. MAKER Round 1
 
@@ -39,8 +39,8 @@ Maker will align the transcript and protein sequences on the genome sequence to 
 - REFERENCE: *Porites astreoides* genome assembly from GeneWiz [(link)](https://github.com/hputnam/Past_Genome/blob/master/De-novo_genome_30-323686303_GENEWIZ_Bioinformatics_Report.pdf)
 - PATH: /data/putnamlab/kevin_wong1/Past_Genome/past_filtered_assembly.fasta
 
-**Transcriptome file: **
-- REFERENCE: *Porites astreoides* transcriptome (Florida Keys) from [Kenkel et al. 2013]() [(FASTA link)](https://matzlab.weebly.com/data--code.html)
+**Transcriptome file:**
+- REFERENCE: *Porites astreoides* transcriptome (Florida Keys) from [Kenkel et al. 2013](https://onlinelibrary.wiley.com/doi/abs/10.1111/mec.12390) [(FASTA link)](https://matzlab.weebly.com/data--code.html)
 - PATH: /data/putnamlab/kevin_wong1/Past_Genome/refs/Kenkel2013_past_transcriptome.fasta
 
 **Protein file:**
