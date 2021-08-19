@@ -3,7 +3,7 @@
 ## <span style="color:blue">**Table of Contents**</span>
 
 1. [MAKER round 1](#1.-MAKER-Round-1)
-2. [MAKER round 2](#2.-MAKER-round-2)
+2. [MAKER round 2](#2.-MAKER-Round-2)
 3. [BUSCO](#3.-BUSCO)
 4. [Functional Annotation](#4.-Functional-Annotation)
 
@@ -104,24 +104,23 @@ maxdnalength=300000 #previously 1000000
 ```
 #!/bin/bash
 #SBATCH --job-name="MAKER_RND1"
-#SBATCH -t 100:00:00
+#SBATCH -t 120:00:00
 #SBATCH --export=NONE
-#SBATCH --nodes=1 --ntasks-per-node=20
 #SBATCH --exclusive
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=kevin_wong1@uri.edu
 #SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome
-#SBATCH --mem=100GB
+#SBATCH --mem=250GB
 
 module load maker/3.01.03
 
-maker -base Rnd1 maker_opts.ctl maker_bopts.ctl maker_exe.ctl
+maker -cpus $SLURM_CPUS_ON_NODE -base Rnd1 maker_opts.ctl maker_bopts.ctl maker_exe.ctl
 
 echo "Mission complete." $(date)
 
 ```
 
-Started: August 17, 2021 at 12pm
+Started: August 19, 2021 at 11:24am
 
 Ended:
 
