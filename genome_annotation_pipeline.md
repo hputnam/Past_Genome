@@ -104,13 +104,13 @@ maxdnalength=300000 #previously 1000000
 ```
 #!/bin/bash
 #SBATCH --job-name="MAKER_RND1"
-#SBATCH -t 120:00:00
+#SBATCH -t 100:00:00
 #SBATCH --export=NONE
 #SBATCH --exclusive
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=kevin_wong1@uri.edu
-#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome
-#SBATCH --mem=250GB
+#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/maker_rnd1
+#SBATCH --mem=100GB
 
 module load maker/3.01.03
 
