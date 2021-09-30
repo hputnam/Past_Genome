@@ -3,9 +3,12 @@
 ## <span style="color:blue">**Table of Contents**</span>
 
 1. [MAKER round 1](#1.-MAKER-Round-1)
-2. [MAKER round 2](#2.-MAKER-Round-2)
-3. [BUSCO](#3.-BUSCO)
-4. [Functional Annotation](#4.-Functional-Annotation)
+2. [SNAP round 1](#2.-SNAP-Round-1)
+3. [MAKER round 2](#3.-MAKER-Round-2)
+4. [SNAP round 2](#4.-SNAP-Round-2)
+5. [MAKER round 3](#5.-MAKER-Round-3)
+6. [BUSCO](#6.-BUSCO)
+7. [Functional Annotation](#7.-Functional-Annotation)
 
 ## 1. MAKER Round 1
 
@@ -25,7 +28,8 @@ A tutorial is available with details and explanations at [MAKER Tutorial](http:/
 #### Additional Information
 - [Maker Information](https://weatherby.genetics.utah.edu/MAKER/wiki/index.php/Main_Page)
 - [Maker Tutorial 2018](https://weatherby.genetics.utah.edu/MAKER/wiki/index.php/MAKER_Tutorial_for_WGS_Assembly_and_Annotation_Winter_School_2018)
-
+- [Yandell tutorial](https://biohpc.cornell.edu/doc/annotation_2018_exercises1.pdf)
+- [Fuller et al. 2020 A. millepora methods](https://przeworskilab.com/wp-content/uploads/Acropora_millepora_methods.pdf)
 
 #### Files needed for MAKER round 1
 
@@ -71,6 +75,7 @@ For MAKER to run, modify the following with the appropriate paths:
 - protein=**PATH_TO_PROTEIN**
 - maxdnalength= (optional, default is 100000)
 
+
 ```
 #-----Genome (these are always required)
 genome=/data/putnamlab/kevin_wong1/Past_Genome/past_filtered_assembly.fasta #genome sequence (fasta file or fasta embeded in GFF3 file)
@@ -99,18 +104,18 @@ protein_gff=  #aligned protein homology evidence from an external GFF3 file
 maxdnalength=300000 #previously 1000000
 ```
 
-#### Shell script: maker_rnd1.sh
+`nano maker_rnd1.1.sh`
 
 ```
 #!/bin/bash
 #SBATCH --job-name="MAKER_RND1"
-#SBATCH -t 100:00:00
+#SBATCH -t 500:00:00
 #SBATCH --export=NONE
 #SBATCH --exclusive
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=kevin_wong1@uri.edu
-#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/maker_rnd1
-#SBATCH --mem=100GB
+#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/maker_rnd1.1
+#SBATCH --mem=250GB
 
 module load maker/3.01.03
 
@@ -120,12 +125,126 @@ echo "Mission complete." $(date)
 
 ```
 
-Started: August 19, 2021 at 11:24am
+*Took about 2 weeks*
 
-Ended:
 
-## 2. MAKER Round 2
+#### Checking completion
 
-## 3. BUSCO
+`less -S Rnd1_master_datastore_index.log `
 
-## 4. Functional Annotation
+All contigs were completed successfully (Started and finished)
+
+#### Merging files into one GFF3 and fasta file
+
+`nano maker_rnd1_merge.sh`
+
+```
+#!/bin/bash
+#SBATCH --job-name="MAKER_RND1.1_merge"
+#SBATCH -t 100:00:00
+#SBATCH --export=NONE
+#SBATCH --exclusive
+#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-user=kevin_wong1@uri.edu
+#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/maker_rnd1.1/Rnd1.maker.output
+#SBATCH --mem=100GB
+
+module load maker/3.01.03
+
+fasta_merge -d Rnd1_master_datastore_index.log
+
+gff3_merge -d Rnd1_master_datastore_index.log
+
+maker2zff -l 50 -x 0.5 Rnd1.all.gff
+
+echo "Mission complete." $(date)
+```
+
+## 2. SNAP Round 1
+
+https://github.com/KorfLab/SNAP
+
+`mkdir snap_1`
+
+`nano snap_1.sh`
+
+```
+#!/bin/bash
+#SBATCH --job-name="snap_1"
+#SBATCH -t 100:00:00
+#SBATCH --export=NONE
+#SBATCH --exclusive
+#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-user=kevin_wong1@uri.edu
+#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/snap_1
+#SBATCH --mem=100GB
+
+module load SNAP/2013-11-29-GCC-8.3.0
+
+fathom -categorize 1000 ../maker_rnd1.1/Rnd1.maker.output/genome.ann ../maker_rnd1.1/Rnd1.maker.output/genome.dna
+
+fathom -export 1000 -plus uni.ann uni.dna
+
+forge export.ann export.dna
+
+hmm-assembler.pl past . > ../past1.hmm
+
+echo "Mission complete." $(date)
+```
+
+## 3. MAKER Round 2
+
+`mkdir maker_rnd2`
+
+`module load maker/3.01.03`
+
+`maker -CTL`
+
+Modifications to **maker_opts.ctl**
+
+```
+#-----Genome (these are always required)
+genome=/data/putnamlab/kevin_wong1/Past_Genome/past_filtered_assembly.fasta #genome sequence (fasta file or fasta embeded in GFF3 file)
+
+#-----Re-annotation Using MAKER Derived GFF3
+maker_gff=/data/putnamlab/kevin_wong1/Past_Genome/maker_rnd1.1/Rnd1.maker.output/Rnd1.all.gff #MAKER derived GFF3 file
+est_pass=1 #use ESTs in maker_gff: 1 = yes, 0 = no
+protein_pass=1 #use protein alignments in maker_gff: 1 = yes, 0 = no
+rm_pass=1 #use repeats in maker_gff: 1 = yes, 0 = no
+
+#-----Gene Prediction
+snaphmm=/data/putnamlab/kevin_wong1/Past_Genome/past1.hmm #SNAP HMM file
+augustus_species=Pastreoides #Augustus gene prediction species model
+
+pred_stats=1 #report AED and QI statistics for all predictions as well as models
+
+```
+
+`nano maker_rnd2.sh`
+
+```
+#!/bin/bash
+#SBATCH --job-name="MAKER_RND2"
+#SBATCH -t 500:00:00
+#SBATCH --export=NONE
+#SBATCH --exclusive
+#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-user=kevin_wong1@uri.edu
+#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/maker_rnd2
+#SBATCH --mem=250GB
+
+module load maker/3.01.03
+
+maker -cpus $SLURM_CPUS_ON_NODE -base Rnd2 maker_opts.ctl maker_bopts.ctl maker_exe.ctl
+
+echo "Mission complete." $(date)
+
+```
+
+## 4. SNAP Round 2
+
+## 5. MAKER Round 3
+
+## 6. BUSCO
+
+## 7. Functional Annotation
