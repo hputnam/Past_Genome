@@ -214,7 +214,6 @@ rm_pass=1 #use repeats in maker_gff: 1 = yes, 0 = no
 
 #-----Gene Prediction
 snaphmm=/data/putnamlab/kevin_wong1/Past_Genome/past1.hmm #SNAP HMM file
-augustus_species=Pastreoides #Augustus gene prediction species model
 
 pred_stats=1 #report AED and QI statistics for all predictions as well as models
 
@@ -231,7 +230,7 @@ pred_stats=1 #report AED and QI statistics for all predictions as well as models
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=kevin_wong1@uri.edu
 #SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/maker_rnd2
-#SBATCH --mem=250GB
+#SBATCH --mem=100GB
 
 module load maker/3.01.03
 
