@@ -5,20 +5,29 @@
 ### Structural Annotation
 
 *Initial MAKER Analysis*
+
 1. [MAKER Round 1](#1.-MAKER-Round-1)
 
 *Training gene prediction software*
+
 2. [SNAP Round 1](#2.-SNAP-Round-1)
+
 3. [AUGUSTUS Round 1](#3.-AUGUSTUS-Round-1)
 
 *MAKER with Ab Initio gene predictors*
+
 4. [MAKER Round 2](#4.-MAKER-Round-2)
 
 *Iteratively running MAKER to improve annotation*
+
 5. [SNAP Round 2](#4.-SNAP-Round-2)
+
 6. [AUGUSTUS Round 2](#6.-AUGUSTUS-Round-2)
+
 7. [MAKER Round 3](#7.-MAKER-Round-3)
+
 8. [BUSCO](#8.-BUSCO)
+
 
 ### Functional Annotation
 
@@ -210,7 +219,7 @@ hmm-assembler.pl past . > ../past1.hmm
 echo "Mission complete." $(date)
 ```
 
-## 3. AUGUSTUS round 1
+## 3. AUGUSTUS Round 1
 
 Here, I followed the AUGUSTUS training from the [darencard tutorial](https://gist.github.com/darencard/bb1001ac1532dd4225b030cf0cd61ce2). We are training AUGUSTUS using BUSCO.
 
@@ -342,7 +351,7 @@ mv BUSCO_past_rnd1_maker_parameters.cfg.orig1 porites_astreoides1_parameters.cfg
 Now these files can be accessed by MAKER
 
 
-## 4. MAKER round 2
+## 4. MAKER Round 2
 
 ### Need to create gff files from the first round of MAKER to input into the second round.
 
