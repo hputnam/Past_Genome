@@ -922,16 +922,6 @@ maker2zff -l 50 -x 0.5 Rnd3.all.gff
 echo "Mission complete." $(date)
 ```
 
-#### Round 3
-
-```bash
-cd /data/putnamlab/kevin_wong1/Past_Genome/maker_rnd3/Rnd3.maker.output
-
-cat Rnd3.all.gff | awk '{ if ($3 == "gene") print $0 }' | awk '{ sum += ($5 - $4) } END { print NR, sum / NR }'
-```
-
-* Gene models: 64636
-* Average Gene length: 4320.31
 
 ## Downstream processing and homology inference
 
@@ -1005,6 +995,17 @@ cat Rnd2.1.all.gff | awk '{ if ($3 == "gene") print $0 }' | awk '{ sum += ($5 - 
 
 * Gene models: 68481
 * Average Gene length: 4059.7
+
+#### Round 3
+
+```bash
+cd /data/putnamlab/kevin_wong1/Past_Genome/maker_rnd3/Rnd3.maker.output
+
+cat Rnd3.all.gff | awk '{ if ($3 == "gene") print $0 }' | awk '{ sum += ($5 - $4) } END { print NR, sum / NR }'
+```
+
+* Gene models: 64636
+* Average Gene length: 4320.31
 
 ### BUSCO
 
