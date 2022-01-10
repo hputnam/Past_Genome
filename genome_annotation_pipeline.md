@@ -1040,3 +1040,58 @@ busco --config /data/putnamlab/kevin_wong1/busco_downloads/config.ini \
 
 echo "BUSCO Mission complete!" $(date)
 ```
+
+BUSCO Output
+```
+--------------------------------------------------
+|Results from dataset metazoa_odb10               |
+--------------------------------------------------
+|C:78.1%[S:69.2%,D:8.9%],F:10.9%,M:11.0%,n:954    |
+|745    Complete BUSCOs (C)                       |
+|660    Complete and single-copy BUSCOs (S)       |
+|85     Complete and duplicated BUSCOs (D)        |
+|104    Fragmented BUSCOs (F)                     |
+|105    Missing BUSCOs (M)                        |
+|954    Total BUSCO groups searched               |
+--------------------------------------------------
+```
+
+```bash
+#!/bin/bash
+#SBATCH --job-name="anno_eval"
+#SBATCH -t 150:00:00
+#SBATCH --export=NONE
+#SBATCH --nodes=1 --ntasks-per-node=20
+#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-user=kevin_wong1@uri.edu
+#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1
+#SBATCH --mem=500GB
+#SBATCH --exclusive
+
+echo "Starting BUSCO" $(date)
+
+#load modules
+module load BUSCO/5.2.2-foss-2020b
+
+#locating AUGUSTUS config path
+export AUGUSTUS_CONFIG_PATH=/data/putnamlab/kevin_wong1/Past_Genome/aug_training_2/config
+
+#run BUSCO
+busco \
+--config /data/putnamlab/kevin_wong1/Past_Genome/aug_training_2/config.ini \
+--in Pastreoides_transcripts_v1.fasta \
+-o annotation_eval \
+-l /data/putnamlab/kevin_wong1/Past_Genome/aug_training_2/busco_downloads/metazoa_odb10 \
+-m transcriptome \
+-f \
+--long \
+--augustus \
+--augustus_parameters='--progress=true' \
+--offline
+
+echo "BUSCO Mission complete!" $(date)
+```
+
+# Functional Annotation
+
+* Resources: Functional Annotation pipeline by D. Becker-Polinski [link](https://github.com/daniellembecker/DanielleBecker_Lab_Notebook/blob/master/_posts/2021-12-08-Molecular-Underpinnings-Functional-Annotation-Pipeline.md)
