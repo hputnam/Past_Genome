@@ -886,8 +886,103 @@ maker -cpus $SLURM_CPUS_ON_NODE -base Rnd3 maker_opts.ctl maker_bopts.ctl maker_
 echo "Mission complete." $(date)
 ```
 
+#### Checking completion
 
-## Counting number of gene models after each round
+`less -S Rnd2.1_master_datastore_index.log `
+
+All contigs were completed successfully (Started and finished)
+
+#### Merging files into one GFF3 and fasta file
+
+`nano maker_rnd3_merge.sh`
+
+```bash
+#!/bin/bash
+#SBATCH --job-name="MAKER_RND3_merge"
+#SBATCH -t 100:00:00
+#SBATCH --export=NONE
+#SBATCH --exclusive
+#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-user=kevin_wong1@uri.edu
+#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/maker_rnd3/Rnd3.maker.output
+#SBATCH --mem=100GB
+
+module load maker/3.01.03
+
+fasta_merge -d Rnd3_master_datastore_index.log
+
+gff3_merge -s -d Rnd3_master_datastore_index.log > Rnd3.all.gff
+
+#GFF w/o the sequences
+
+gff3_merge -n -s -d Rnd3_master_datastore_index.log > Rnd3.all.noseq.gff
+
+maker2zff -l 50 -x 0.5 Rnd3.all.gff
+
+echo "Mission complete." $(date)
+```
+
+#### Round 3
+
+```bash
+cd /data/putnamlab/kevin_wong1/Past_Genome/maker_rnd3/Rnd3.maker.output
+
+cat Rnd3.all.gff | awk '{ if ($3 == "gene") print $0 }' | awk '{ sum += ($5 - $4) } END { print NR, sum / NR }'
+```
+
+* Gene models: 64636
+* Average Gene length: 4320.31
+
+## Downstream processing and homology inference
+
+`mkdir past_struc_annotations_v1`
+
+```bash
+cp Rnd3.all.gff ../../past_struc_annotations_v1/
+cp Rnd3.all.noseq.gff ../../past_struc_annotations_v1/
+cp Rnd3.all.maker.proteins.fasta ../../past_struc_annotations_v1/
+cp Rnd3.all.maker.transcripts.fasta ../../past_struc_annotations_v1/
+```
+
+`nano maker3_postprocessing.sh`
+
+```bash
+#!/bin/bash
+#SBATCH --job-name="MAKER_RND3_proc"
+#SBATCH -t 100:00:00
+#SBATCH --export=NONE
+#SBATCH --exclusive
+#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-user=kevin_wong1@uri.edu
+#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1
+#SBATCH --mem=100GB
+
+module load maker/3.01.03
+
+# create naming table (there are additional options for naming beyond defaults)
+maker_map_ids --prefix Pastreoides --justify 5 Rnd3.all.gff > Rnd3.all.maker.name.map
+
+# replace names in GFF files
+map_gff_ids Rnd3.all.maker.name.map Rnd3.all.gff
+map_gff_ids Rnd3.all.maker.name.map Rnd3.all.noseq.gff
+
+# replace names in FASTA headers
+map_fasta_ids Rnd3.all.maker.name.map Rnd3.all.maker.transcripts.fasta
+map_fasta_ids Rnd3.all.maker.name.map Rnd3.all.maker.proteins.fasta
+
+# renaming final files
+
+mv Rnd3.all.gff Pastreoides_all_v1.gff
+mv Rnd3.all.noseq.gff Pastreoides_noseq_v1.gff
+mv Rnd3.all.maker.transcripts.fasta Pastreoides_transcripts_v1.fasta
+mv Rnd3.all.maker.proteins.fasta Pastreoides_protiens_v1.fasta
+
+echo "Mission complete." $(date)
+```
+
+## Assessing Structural Annotation
+
+### Counting number of gene models after each round
 
 #### Round 1
 
@@ -910,3 +1005,37 @@ cat Rnd2.1.all.gff | awk '{ if ($3 == "gene") print $0 }' | awk '{ sum += ($5 - 
 
 * Gene models: 68481
 * Average Gene length: 4059.7
+
+### BUSCO
+
+#### Transcripts
+
+`nano busco_transcripts.sh`
+
+```
+#!/bin/bash
+#SBATCH --job-name="BUSCO"
+#SBATCH -t 100:00:00
+#SBATCH --export=NONE
+#SBATCH --nodes=1 --ntasks-per-node=20
+#SBATCH --exclusive
+#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-user=kevin_wong1@uri.edu
+#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1
+#SBATCH --mem=50GB
+
+echo "Starting BUSCO" $(date)
+
+#load modules
+module load BUSCO/4.1.4-foss-2019b-Python-3.7.4
+
+#run BUSCO
+busco --config /data/putnamlab/kevin_wong1/busco_downloads/config.ini \
+-m transcriptome \
+-i Pastreoides_transcripts_v1.fasta \
+-o Past_transcripts_v1_BUSCO \
+-l /data/putnamlab/kevin_wong1/busco_downloads/metazoa_odb10 \
+--offline
+
+echo "BUSCO Mission complete!" $(date)
+```
