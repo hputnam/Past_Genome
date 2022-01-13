@@ -1095,3 +1095,90 @@ echo "BUSCO Mission complete!" $(date)
 # Functional Annotation
 
 * Resources: Functional Annotation pipeline by D. Becker-Polinski [link](https://github.com/daniellembecker/DanielleBecker_Lab_Notebook/blob/master/_posts/2021-12-08-Molecular-Underpinnings-Functional-Annotation-Pipeline.md)
+
+## Align query protein sequences against databases
+
+1) BLAST the protein sequences against Swiss-Prot
+
+`nano swissprot_blast.sh`
+
+```bash
+#!/bin/bash
+#SBATCH --job-name="swissprot-blastp-protein"
+#SBATCH -t 240:00:00
+#SBATCH --export=NONE
+#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-user=kevin_wong1@uri.edu
+#SBATCH --mem=100GB
+#SBATCH --error="swissprot_blastp_out_error"
+#SBATCH --output="swissprot_blastp_out"
+#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1/functional_anno_v1  
+#SBATCH --exclusive
+
+echo "START" $(date)
+module load BLAST+/2.11.0-gompi-2020b #load blast module
+
+echo "Blast against swissprot database" $(date)
+
+blastp -max_target_seqs 5 \
+-num_threads 20 \
+-db /data/putnamlab/shared/databases/swiss_db/swissprot_20211022 \
+-query /data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1/Pastreoides_protiens_v1.fasta \
+-evalue 1e-5 \
+-outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen' \
+-out PastGeneModels_vs_sprot_1e-5_max5.out
+
+echo "STOP" $(date)
+
+```
+
+
+## Interproscan
+
+`sbatch Past_InterProScan.sh`
+
+```bash
+#!/bin/bash
+#SBATCH --job-name="InterProScan"
+#SBATCH -t 30-00:00:00
+#SBATCH --export=NONE
+#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-user=kevin_wong1@uri.edu
+#SBATCH --mem=100GB
+#SBATCH --error="interproscan_out_error"
+#SBATCH --output="interproscan_out"
+#SBATCH --exclusive
+#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1/functional_anno_v1/InterProScan
+
+echo "START $(date)"
+
+# Load module
+module load InterProScan/5.52-86.0-foss-2021a
+module load Java/11.0.2
+java -version
+
+# Run InterProScan
+interproscan.sh --cpu $SLURM_CPUS_ON_NODE ... \
+-version \
+-f XML \
+-i /data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1/Pastreoides_protiens_v1.fasta \
+-b Past.interpro.20220113  \
+-iprlookup \
+-goterms \
+-pa \
+
+interproscan.sh -mode convert \
+-f GFF3 \
+-i Past.interpro.20220113.xml \
+-b Past.interpro.20220113
+
+# -i is the input data
+# -b is the output file base
+# -f is formats
+# -iprlookup enables mapping
+# -goterms is GO Term
+# -pa is pathway mapping
+# -version displays version number
+
+echo "DONE $(date)"
+```
