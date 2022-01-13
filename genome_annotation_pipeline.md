@@ -965,7 +965,7 @@ map_fasta_ids Rnd3.all.maker.name.map Rnd3.all.maker.proteins.fasta
 mv Rnd3.all.gff Pastreoides_all_v1.gff
 mv Rnd3.all.noseq.gff Pastreoides_noseq_v1.gff
 mv Rnd3.all.maker.transcripts.fasta Pastreoides_transcripts_v1.fasta
-mv Rnd3.all.maker.proteins.fasta Pastreoides_protiens_v1.fasta
+mv Rnd3.all.maker.proteins.fasta Pastreoides_proteins_v1.fasta
 
 echo "Mission complete." $(date)
 ```
@@ -1123,10 +1123,137 @@ echo "Blast against swissprot database" $(date)
 blastp -max_target_seqs 5 \
 -num_threads 20 \
 -db /data/putnamlab/shared/databases/swiss_db/swissprot_20211022 \
--query /data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1/Pastreoides_protiens_v1.fasta \
+-query /data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1/Pastreoides_proteins_v1.fasta \
 -evalue 1e-5 \
 -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen' \
 -out PastGeneModels_vs_sprot_1e-5_max5.out
+
+echo "STOP" $(date)
+
+```
+
+i) Get the best hit for each Gene Model (protein) Swiss-Prot
+
+```
+#Sort by 1. query name, 2. bitscore, 3. evalue, 4. protein identity, and extract the best line for each query (bitscore more important than evalue, evalue more important than nucleotide identity).
+
+cat PastGeneModels_vs_sprot_1e-5_max5.out | sort -k1,1 -k2,2 -k3,3r -k4,4r -k11,11 | awk '!seen[$1]++' > PastGeneModels_vs_sprot_1e-5_besthit.out
+
+wc -l PastGeneModels_vs_sprot_1e-5_besthit.out #30,487
+```
+
+ii) Select the gene model proteins without hits in Swiss-Prot
+
+
+first use awk to print a list of all the Gene Model names from besthits.out
+```
+awk '{print $1}' PastGeneModels_vs_sprot_1e-5_besthit.out > list_of_Pastgenemodelproteins_sprot.txt
+```
+
+Then exclude these Gene Model names from your original fasta/.faa/protein file.
+* needed to load the module that has the script with the -exclude command in it
+
+#first, loaded the newest module for kentUtils/416-foss-2020b
+
+`module load kentUtils/416-foss-2020b`
+
+#second use module show command to see paths to certain scripts and softwares in the module
+
+`module show kentUtils/416-foss-2020b`
+
+```
+-------------------------------------------------------------------
+/opt/modules/all/kentUtils/416-foss-2020b:
+
+module-whatis     Description: LiftOver, Blat and other utilities
+module-whatis     Homepage: https://hgdownload.soe.ucsc.edu/
+module-whatis     URL: https://hgdownload.soe.ucsc.edu/
+conflict     kentUtils
+prepend-path     CMAKE_PREFIX_PATH /opt/software/kentUtils/416-foss-2020b
+prepend-path     PATH /opt/software/kentUtils/416-foss-2020b/bin
+setenv         EBROOTKENTUTILS /opt/software/kentUtils/416-foss-2020b
+setenv         EBVERSIONKENTUTILS 416
+setenv         EBDEVELKENTUTILS /opt/software/kentUtils/416-foss-2020b/easybuild/kentUtils-416-foss-2020b-easybuild-devel
+-------------------------------------------------------------------
+```
+
+I selected to the prepend-path /opt/software/kentUtils/416-foss-2020b/bin to see if it took me to the 'faSomeRecords' script which it did
+
+`/opt/software/kentUtils/416-foss-2020b/bin/faSomeRecords`
+
+I then ran the -exclude command to exclude the blasted Gene Models from the .faa file
+
+```
+/opt/software/kentUtils/416-foss-2020b/bin/faSomeRecords -exclude /data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1/Pastreoides_proteins_v1.fasta list_of_Pastgenemodelproteins_sprot.txt Past_proteins_names_v1.0.faa.prot4trembl
+```
+
+Checking the number of Gene Models:
+
+`wc -l Past_proteins_names_v1.0.faa.prot4trembl #177,969`
+
+* use this file to blast against trembl
+* need to check these gene model numbers
+
+Downloading the .xml file for Blast2Go
+
+`nano swissprot_blast_xml.sh`
+
+```bash
+#!/bin/bash
+#SBATCH --job-name="swissprot-blastp-protein-xml"
+#SBATCH -t 240:00:00
+#SBATCH --export=NONE
+#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-user=kevin_wong1@uri.edu
+#SBATCH --mem=100GB
+#SBATCH --error="xml_blastp_out_error"
+#SBATCH --output="xml_blastp_out"
+#SBATCH --exclusive
+#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1/functional_anno_v1  
+
+echo "START" $(date)
+module load BLAST+/2.11.0-gompi-2020b #load blast module
+
+echo "Blast against swissprot database with xml format out" $(date)
+blastp -max_target_seqs 5 \
+-num_threads 20 \
+-db /data/putnamlab/shared/databases/swiss_db/swissprot_20211022 \
+-query /data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1/Pastreoides_proteins_v1.fasta \
+-evalue 1e-5 \
+-outfmt '5 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen' \
+-out PastGeneModels_maxhit.xml
+
+echo "STOP" $(date)
+```
+s
+2) BLAST the remaining protein sequences against Trembl
+
+`nano trembl_blastp.sh`
+
+```bash
+#!/bin/bash
+#SBATCH --job-name="trembl-blastp-protein"
+#SBATCH -t 240:00:00
+#SBATCH --export=NONE
+#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-user=kevin_wong1@uri.edu
+#SBATCH --mem=100GB
+#SBATCH --error="trembl_blastp_out_error"
+#SBATCH --output="trembl_blastp_out"
+#SBATCH --exclusive
+#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1/functional_anno_v1
+
+echo "START" $(date)
+module load BLAST+/2.11.0-gompi-2020b #load blast module
+
+echo "Blast against trembl database" $(date)
+blastp -max_target_seqs 5 \
+-num_threads 20 \
+-db /data/putnamlab/shared/databases/trembl_db/trembl_20211022 \
+-query Past_proteins_names_v1.0.faa.prot4trembl \
+-evalue 1e-5 \
+-outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen' \
+-out PastGeneModels_vs_trembl_1e-5_max5.out
 
 echo "STOP" $(date)
 
@@ -1157,20 +1284,10 @@ module load InterProScan/5.52-86.0-foss-2021a
 module load Java/11.0.2
 java -version
 
-# Run InterProScan
-interproscan.sh --cpu $SLURM_CPUS_ON_NODE ... \
--version \
--f XML \
--i /data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1/Pastreoides_protiens_v1.fasta \
--b Past.interpro.20220113  \
--iprlookup \
--goterms \
--pa \
-
-interproscan.sh -mode convert \
--f GFF3 \
--i Past.interpro.20220113.xml \
--b Past.interpro.20220113
+interproscan.sh --cpu $SLURM_CPUS_ON_NODE ...
+interproscan.sh -version
+interproscan.sh -f XML -i /data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1/Pastreoides_proteins_v1.fasta -b Past.interpro.20220113  -iprlookup -goterms -pa
+interproscan.sh -mode convert -f GFF3 -i Past.interpro.20220113.xml -b Past.interpro.20220113
 
 # -i is the input data
 # -b is the output file base
