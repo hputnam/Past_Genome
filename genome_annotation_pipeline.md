@@ -1007,6 +1007,26 @@ cat Rnd3.all.gff | awk '{ if ($3 == "gene") print $0 }' | awk '{ sum += ($5 - $4
 * Gene models: 64636
 * Average Gene length: 4320.31
 
+```bash
+cat Pastreoides_all_v1.gff | awk '{ if ($3 == "mRNA") print $0 }' | awk '{ sum += ($5 - $4) } END { print NR, sum / NR }'
+```
+
+* Number of mRNA Transcripts: 64636
+* Average transcript length: 4320.31
+
+```bash
+grep -c ">" Pastreoides_transcripts_v1.fasta
+```
+
+* Number of transcripts in fasta file: 64636
+
+```bash
+grep -c ">" Pastreoides_proteins_v1.fasta
+```
+
+* Number of proteins in fasta file: 64636
+
+
 ### BUSCO
 
 #### Transcripts
@@ -1139,6 +1159,7 @@ i) Get the best hit for each Gene Model (protein) Swiss-Prot
 
 cat PastGeneModels_vs_sprot_1e-5_max5.out | sort -k1,1 -k2,2 -k3,3r -k4,4r -k11,11 | awk '!seen[$1]++' > PastGeneModels_vs_sprot_1e-5_besthit.out
 
+wc -l PastGeneModels_vs_sprot_1e-5_max5.out #239,922
 wc -l PastGeneModels_vs_sprot_1e-5_besthit.out #30,487
 ```
 
@@ -1148,6 +1169,8 @@ ii) Select the gene model proteins without hits in Swiss-Prot
 first use awk to print a list of all the Gene Model names from besthits.out
 ```
 awk '{print $1}' PastGeneModels_vs_sprot_1e-5_besthit.out > list_of_Pastgenemodelproteins_sprot.txt
+
+wc -l list_of_Pastgenemodelproteins_sprot.txt #30,487
 ```
 
 Then exclude these Gene Model names from your original fasta/.faa/protein file.
@@ -1189,10 +1212,9 @@ I then ran the -exclude command to exclude the blasted Gene Models from the .faa
 
 Checking the number of Gene Models:
 
-`wc -l Past_proteins_names_v1.0.faa.prot4trembl #177,969`
+`grep -c ">" Past_proteins_names_v1.0.faa.prot4trembl #34,149`
 
 * use this file to blast against trembl
-* need to check these gene model numbers
 
 Downloading the .xml file for Blast2Go
 
@@ -1225,7 +1247,7 @@ blastp -max_target_seqs 5 \
 
 echo "STOP" $(date)
 ```
-s
+
 2) BLAST the remaining protein sequences against Trembl
 
 `nano trembl_blastp.sh`
@@ -1258,7 +1280,6 @@ blastp -max_target_seqs 5 \
 echo "STOP" $(date)
 
 ```
-
 
 ## Interproscan
 
