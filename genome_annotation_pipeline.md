@@ -1278,8 +1278,69 @@ blastp -max_target_seqs 5 \
 -out PastGeneModels_vs_trembl_1e-5_max5.out
 
 echo "STOP" $(date)
-
 ```
+
+`nano trembl_blastp_hit1.sh`
+
+```bash
+#!/bin/bash
+#SBATCH --job-name="trembl-blastp-protein"
+#SBATCH -t 240:00:00
+#SBATCH --export=NONE
+#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-user=kevin_wong1@uri.edu
+#SBATCH --mem=100GB
+#SBATCH --error="trembl_hit1_blastp_out_error"
+#SBATCH --output="trembl_hit1_blastp_out"
+#SBATCH --exclusive
+#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1/functional_anno_v1
+#SBATCH -c 36
+
+echo "START" $(date)
+module load BLAST+/2.11.0-gompi-2020b #load blast module
+
+echo "Blast against trembl database" $(date)
+blastp -max_target_seqs 1 \
+-num_threads 20 \
+-db /data/putnamlab/shared/databases/trembl_db/trembl_20211022 \
+-query Past_proteins_names_v1.0.faa.prot4trembl \
+-evalue 1e-5 \
+-outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen' \
+-out PastGeneModels_vs_trembl_1e-5_max1.out
+
+echo "STOP" $(date)
+```
+
+`nano trembl_blastp_xml.sh`
+
+```bash
+#!/bin/bash
+#SBATCH --job-name="xml-blastp-protein"
+#SBATCH -t 240:00:00
+#SBATCH --export=NONE
+#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-user=kevin_wong1@uri.edu
+#SBATCH --mem=100GB
+#SBATCH --error="xml_blastp_out_error"
+#SBATCH --output="xml_blastp_out"
+#SBATCH --exclusive
+#SBATCH -c 36
+
+echo "START" $(date)
+module load BLAST+/2.11.0-gompi-2020b #load blast module
+
+echo "Blast against trembl database for xml" $(date)
+blastp -max_target_seqs 1 \
+-num_threads 20 \
+-db /data/putnamlab/shared/databases/trembl_db/trembl_20211022 \
+-query Past_proteins_names_v1.0.faa.prot4trembl \
+-evalue 1e-5 \
+-outfmt '5 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen' \
+-out Past_protein_blastp_trembl.xml
+
+echo "STOP" $(date)
+```
+
 
 ## Interproscan
 

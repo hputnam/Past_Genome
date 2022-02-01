@@ -1,6 +1,6 @@
 # BUSCO Comparisons
 
-### Genome Comparisons
+## Genome Comparisons
 
 Porites lutea
 * Reference
@@ -176,4 +176,194 @@ echo "BUSCO Mission complete!" $(date)
         39      Fragmented BUSCOs (F)                      
         48      Missing BUSCOs (M)                         
         954     Total BUSCO groups searched    
+```
+
+
+## Transcriptome Comparisons
+
+### Porites astreoides (Wong and Putnam 2022)
+
+`nano Wong_BUSCO.sh`
+
+```
+#!/bin/bash
+#SBATCH --job-name="Wong_BUSCO"
+#SBATCH -t 100:00:00
+#SBATCH --export=NONE
+#SBATCH --nodes=1 --ntasks-per-node=20
+#SBATCH --exclusive
+#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-user=kevin_wong1@uri.edu
+#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/BUSCO_Compare/transcriptomes
+#SBATCH --mem=50GB
+
+echo "Starting BUSCO" $(date)
+
+#load modules
+module load BUSCO/5.2.2-foss-2020b
+
+#run BUSCO
+busco --config config.ini \
+-m transcriptome \
+-i /data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1/Pastreoides_transcripts_v1.fasta \
+-o Wong_BUSCO \
+-l /data/putnamlab/kevin_wong1/busco_downloads/metazoa_odb10 \
+--offline
+
+echo "BUSCO Mission complete!" $(date)
+```
+```
+# BUSCO version is: 5.2.2
+# The lineage dataset is: metazoa_odb10 (Creation date: 2020-09-10, number of genomes: 65, number of BUSCOs: 954)
+# Summarized benchmarking in BUSCO notation for file /data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1/Pastreoides_transcripts_v1.fasta
+# BUSCO was run in mode: transcriptome
+
+        ***** Results: *****
+
+        C:79.6%[S:69.6%,D:10.0%],F:12.1%,M:8.3%,n:954      
+        759     Complete BUSCOs (C)                        
+        664     Complete and single-copy BUSCOs (S)        
+        95      Complete and duplicated BUSCOs (D)         
+        115     Fragmented BUSCOs (F)                      
+        80      Missing BUSCOs (M)                         
+        954     Total BUSCO groups searched                
+```
+
+
+### Porites astreoides (Kenkel et al 2013)
+
+`nano Kenkel_BUSCO.sh`
+
+```
+#!/bin/bash
+#SBATCH --job-name="Kenkel_BUSCO"
+#SBATCH -t 100:00:00
+#SBATCH --export=NONE
+#SBATCH --nodes=1 --ntasks-per-node=20
+#SBATCH --exclusive
+#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-user=kevin_wong1@uri.edu
+#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/BUSCO_Compare/transcriptomes
+#SBATCH --mem=50GB
+
+echo "Starting BUSCO" $(date)
+
+#load modules
+module load BUSCO/5.2.2-foss-2020b
+
+#run BUSCO
+busco --config config.ini \
+-m transcriptome \
+-i /data/putnamlab/kevin_wong1/Past_Genome/refs/Kenkel2013_past_transcriptome.fasta \
+-o Kenkel_BUSCO \
+-l /data/putnamlab/kevin_wong1/busco_downloads/metazoa_odb10 \
+--offline
+
+echo "BUSCO Mission complete!" $(date)
+```
+
+```
+# BUSCO version is: 5.2.2
+# The lineage dataset is: metazoa_odb10 (Creation date: 2020-09-10, number of genomes: 65, number of BUSCOs: 954)
+# Summarized benchmarking in BUSCO notation for file /data/putnamlab/kevin_wong1/Past_Genome/refs/Kenkel2013_past_transcriptome.fasta
+# BUSCO was run in mode: transcriptome
+
+        ***** Results: *****
+
+        C:22.9%[S:22.2%,D:0.7%],F:31.1%,M:46.0%,n:954      
+        219     Complete BUSCOs (C)                        
+        212     Complete and single-copy BUSCOs (S)        
+        7       Complete and duplicated BUSCOs (D)         
+        297     Fragmented BUSCOs (F)                      
+        438     Missing BUSCOs (M)                         
+        954     Total BUSCO groups searched    
+```
+
+### Porites astreoides (Mansour et al 2016)
+
+`nano Mansour_BUSCO.sh`
+
+```
+#!/bin/bash
+#SBATCH --job-name="Mansour_BUSCO"
+#SBATCH -t 100:00:00
+#SBATCH --export=NONE
+#SBATCH --nodes=1 --ntasks-per-node=20
+#SBATCH --exclusive
+#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-user=kevin_wong1@uri.edu
+#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/BUSCO_Compare/transcriptomes
+#SBATCH --mem=50GB
+
+echo "Starting BUSCO" $(date)
+
+#load modules
+module load BUSCO/5.2.2-foss-2020b
+
+#run BUSCO
+busco --config config.ini \
+-m transcriptome \
+-i /data/putnamlab/kevin_wong1/REFS/Past_Mansour/p_ast2016.fasta \
+-o Mansour_BUSCO \
+-l /data/putnamlab/kevin_wong1/busco_downloads/metazoa_odb10 \
+--offline
+
+echo "BUSCO Mission complete!" $(date)
+```
+
+```
+BUSCO version is: 5.2.2
+# The lineage dataset is: metazoa_odb10 (Creation date: 2020-09-10, number of genomes: 65, number of BUSCOs: 954)
+# Summarized benchmarking in BUSCO notation for file /data/putnamlab/kevin_wong1/REFS/Past_Mansour/p_ast2016.fasta
+# BUSCO was run in mode: transcriptome
+
+       ***** Results: *****
+
+       C:30.3%[S:18.1%,D:12.2%],F:4.9%,M:64.8%,n:954      
+       289     Complete BUSCOs (C)                        
+       173     Complete and single-copy BUSCOs (S)        
+       116     Complete and duplicated BUSCOs (D)         
+       47      Fragmented BUSCOs (F)                      
+       618     Missing BUSCOs (M)                         
+       954     Total BUSCO groups searched   
+```
+
+
+### Porites astreoides (Walker et al 2019)
+
+https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/CX9HWD
+
+```
+scp CoralTranscripts_Transcriptome_FINAL.fasta kevin_wong1@ssh3.hac.uri.edu:/data/putnamlab/kevin_wong1/Past_Genome/refs
+
+
+```
+`nano Walker_BUSCO.sh`
+
+```
+#!/bin/bash
+#SBATCH --job-name="Walker_BUSCO"
+#SBATCH -t 100:00:00
+#SBATCH --export=NONE
+#SBATCH --nodes=1 --ntasks-per-node=20
+#SBATCH --exclusive
+#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-user=kevin_wong1@uri.edu
+#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/BUSCO_Compare/transcriptomes
+#SBATCH --mem=50GB
+
+echo "Starting BUSCO" $(date)
+
+#load modules
+module load BUSCO/5.2.2-foss-2020b
+
+#run BUSCO
+busco --config config.ini \
+-m transcriptome \
+-i /data/putnamlab/kevin_wong1/Past_Genome/refs/Walker_past_transcriptome.fasta \
+-o Walker_BUSCO \
+-l /data/putnamlab/kevin_wong1/busco_downloads/metazoa_odb10 \
+--offline
+
+echo "BUSCO Mission complete!" $(date)
 ```
