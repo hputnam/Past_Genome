@@ -183,6 +183,8 @@ echo "BUSCO Mission complete!" $(date)
 
 ### Porites astreoides (Wong and Putnam 2022)
 
+`grep -c ">" Pastreoides_transcripts_v1.fasta  #64636
+
 `nano Wong_BUSCO.sh`
 
 ```
@@ -232,6 +234,8 @@ echo "BUSCO Mission complete!" $(date)
 
 ### Porites astreoides (Kenkel et al 2013)
 
+`grep -c ">" Kenkel2013_past_transcriptome.fasta  #30740
+
 `nano Kenkel_BUSCO.sh`
 
 ```
@@ -280,6 +284,8 @@ echo "BUSCO Mission complete!" $(date)
 ```
 
 ### Porites astreoides (Mansour et al 2016)
+
+`grep -c ">" p_ast2016.fasta  #129718`
 
 `nano Mansour_BUSCO.sh`
 
@@ -343,6 +349,10 @@ For some reason, this fasta file has duplicate of sequence >c84342_g1_i1 in it, 
 
 `awk 'BEGIN {i = 1;} { if ($1 ~ /^>/) { tmp = h[i]; h[i] = $1; } else if (!a[$1]) { s[i] = $1; a[$1] = "1"; i++; } else { h[i] = tmp; } } END { for (j = 1; j < i; j++) { print h[j]; print s[j]; } }' < Walker_past_transcriptome.fasta > Walker_past_transcriptome_clean.fasta`
 
+
+`grep -c ">" Walker_past_transcriptome.fasta #443025`
+
+`grep -c ">" Walker_past_transcriptome_clean.fasta #289398`
 
 `nano Walker_BUSCO.sh`
 
