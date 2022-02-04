@@ -334,10 +334,16 @@ BUSCO version is: 5.2.2
 https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/CX9HWD
 
 ```
-scp CoralTranscripts_Transcriptome_FINAL.fasta kevin_wong1@ssh3.hac.uri.edu:/data/putnamlab/kevin_wong1/Past_Genome/refs
+wget -O CoralTranscripts_Transcriptome_FINAL.fasta "https://dataverse.harvard.edu/api/access/datafile/:persistentId?persistentId=doi:10.7910/DVN/CX9HWD/YDFYYK"
 
-
+mv CoralTranscripts_Transcriptome_FINAL.fasta Walker_past_transcriptome.fasta
 ```
+
+For some reason, this fasta file has duplicate of sequence >c84342_g1_i1 in it, so it will not run BUSCO. To remove the duplicate sequence I am doing the following:
+
+`awk 'BEGIN {i = 1;} { if ($1 ~ /^>/) { tmp = h[i]; h[i] = $1; } else if (!a[$1]) { s[i] = $1; a[$1] = "1"; i++; } else { h[i] = tmp; } } END { for (j = 1; j < i; j++) { print h[j]; print s[j]; } }' < Walker_past_transcriptome.fasta > Walker_past_transcriptome_clean.fasta`
+
+
 `nano Walker_BUSCO.sh`
 
 ```
@@ -360,10 +366,26 @@ module load BUSCO/5.2.2-foss-2020b
 #run BUSCO
 busco --config config.ini \
 -m transcriptome \
--i /data/putnamlab/kevin_wong1/Past_Genome/refs/Walker_past_transcriptome.fasta \
+-i /data/putnamlab/kevin_wong1/Past_Genome/refs/Walker_past_transcriptome_clean.fasta \
 -o Walker_BUSCO \
 -l /data/putnamlab/kevin_wong1/busco_downloads/metazoa_odb10 \
 --offline
 
 echo "BUSCO Mission complete!" $(date)
+```
+```
+# BUSCO version is: 5.2.2
+# The lineage dataset is: metazoa_odb10 (Creation date: 2020-09-10, number of genomes: 65, number of BUSCOs: 954)
+# Summarized benchmarking in BUSCO notation for file /data/putnamlab/kevin_wong1/Past_Genome/refs/Walker_past_transcriptome_clean.fasta
+# BUSCO was run in mode: transcriptome
+
+        ***** Results: *****
+
+        C:63.1%[S:26.5%,D:36.6%],F:21.6%,M:15.3%,n:954     
+        602     Complete BUSCOs (C)                        
+        253     Complete and single-copy BUSCOs (S)        
+        349     Complete and duplicated BUSCOs (D)         
+        206     Fragmented BUSCOs (F)                      
+        146     Missing BUSCOs (M)                         
+        954     Total BUSCO groups searched   
 ```
