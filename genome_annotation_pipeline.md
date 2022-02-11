@@ -1311,6 +1311,36 @@ blastp -max_target_seqs 1 \
 echo "STOP" $(date)
 ```
 
+Get the best hit for each Gene Model (protein) Trembl
+```
+cat PastGeneModels_vs_trembl_1e-5_max1.out | sort -k1,1 -k2,2 -k3,3r -k4,4r -k11,11 | awk '!seen[$1]++' > PastGeneModels_vs_trembl_1e-5_besthit.out
+
+wc -l PastGeneModels_vs_trembl_1e-5_besthit.out #24525
+```
+
+Select the gene model proteins without hits in Trembl
+```bash
+#first use awk to print a list of all the Gene Model names from besthits.out
+
+awk '{print $1}' PastGeneModels_vs_trembl_1e-5_besthit.out > list_of_Pastgenemodelproteins_trembl.txt
+
+#load the newest module for kentUtils/416-foss-2020b
+
+module load kentUtils/416-foss-2020b
+
+#then exclude these Gene Model names from your original fasta/.faa/protein file
+
+/opt/software/kentUtils/416-foss-2020b/bin/faSomeRecords -exclude Past_proteins_names_v1.0.faa.prot4trembl list_of_Pastgenemodelproteins_trembl.txt Past_proteins_names_v1.0.faa.prot4nr
+
+
+#check the number of Gene Models
+
+grep -c ">" Past_proteins_names_v1.0.faa.prot4nr #9624
+
+#using this file to blast against nr database
+
+```
+
 `nano trembl_blastp_xml.sh`
 
 ```bash
@@ -1321,10 +1351,9 @@ echo "STOP" $(date)
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=kevin_wong1@uri.edu
 #SBATCH --mem=100GB
-#SBATCH --error="xml_blastp_out_error"
-#SBATCH --output="xml_blastp_out"
+#SBATCH --error="xml_blastp_out_terror"
+#SBATCH --output="xml_blastp_tout"
 #SBATCH --exclusive
-#SBATCH -c 36
 
 echo "START" $(date)
 module load BLAST+/2.11.0-gompi-2020b #load blast module
@@ -1340,6 +1369,69 @@ blastp -max_target_seqs 1 \
 
 echo "STOP" $(date)
 ```
+
+3) BLAST the remaining protein sequences against nr
+
+`nano ncbi_blastp_out.sh`
+
+```bash
+#!/bin/bash
+#SBATCH --job-name="ncbi-blastp-protein-out"
+#SBATCH -t 240:00:00
+#SBATCH --export=NONE
+#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-user=kevin_wong1@uri.edu
+#SBATCH --mem=100GB
+#SBATCH --error="ncbi_blastp_out_error"
+#SBATCH --output="ncbi_blastp_out"
+#SBATCH --exclusive
+
+echo "START" $(date)
+module load BLAST+/2.11.0-gompi-2020b #load blast module
+
+echo "Blast against ncbi database" $(date)
+blastp -max_target_seqs 5 \
+-num_threads $SLURM_CPUS_ON_NODE \
+-db /data/shared/ncbi-nr/nr \
+-query Past_proteins_names_v1.0.faa.prot4nr \
+-evalue 1e-5 \
+-outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen' \
+-out PastGeneModels_ncbi_max5hits.out
+
+echo "STOP" $(date)
+```
+
+
+`nano ncbi_blastp.sh`
+
+```bash
+#!/bin/bash
+#SBATCH --job-name="ncbi-blastp-protein"
+#SBATCH -t 240:00:00
+#SBATCH --export=NONE
+#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-user=kevin_wong1@uri.edu
+#SBATCH --mem=100GB
+#SBATCH --error="ncbi_blastp_out_error"
+#SBATCH --output="ncbi_blastp_out"
+#SBATCH --exclusive
+
+echo "START" $(date)
+module load BLAST+/2.11.0-gompi-2020b #load blast module
+
+echo "Blast against ncbi database" $(date)
+blastp -max_target_seqs 5 \
+-num_threads $SLURM_CPUS_ON_NODE \
+-db /data/shared/ncbi-nr/nr \
+-query Past_proteins_names_v1.0.faa.prot4nr \
+-evalue 1e-5 \
+-outfmt '5 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen' \
+-out PastGeneModels_ncbi.xml
+
+echo "STOP" $(date)
+```
+
+
 
 
 ## Interproscan
