@@ -226,4 +226,4 @@ STAR --runMode alignReads \
 done
 ```
 
-![ ](https://github.com/hputnam/Past_Genome/tree/master/images/STAR_mapping_stats.png)
+![ ](https://github.com/hputnam/Past_Genome/blob/master/images/STAR_mapping_stats.png)
