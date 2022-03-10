@@ -1432,8 +1432,6 @@ echo "STOP" $(date)
 ```
 
 
-
-
 ## Interproscan
 
 `sbatch Past_InterProScan.sh`
@@ -1472,4 +1470,26 @@ interproscan.sh -mode convert -f GFF3 -i Past.interpro.20220113.xml -b Past.inte
 # -version displays version number
 
 echo "DONE $(date)"
+```
+
+## Exporting xml Files
+
+SwissProt
+```
+scp kevin_wong1@ssh3.hac.uri.edu:/data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1/functional_anno_v1/PastGeneModels_maxhit.xml /Users/kevinwong/Desktop/URI_PHD/Projects/Past_genome/Functional_Annotation_files/
+```
+
+nr
+```
+scp kevin_wong1@ssh3.hac.uri.edu:/data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1/functional_anno_v1/PastGeneModels_ncbi.xml /Users/kevinwong/Desktop/URI_PHD/Projects/Past_genome/Functional_Annotation_files/
+```
+
+trembl
+```
+scp kevin_wong1@ssh3.hac.uri.edu:/data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1/functional_anno_v1/Past_protein_blastp_trembl.xml /Users/kevinwong/Desktop/URI_PHD/Projects/Past_genome/Functional_Annotation_files/
+```
+
+Interproscan
+```
+scp kevin_wong1@ssh3.hac.uri.edu:/data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1/functional_anno_v1/InterProScan/Past.interpro.20220113.xml /Users/kevinwong/Desktop/URI_PHD/Projects/Past_genome/Functional_Annotation_files/
 ```

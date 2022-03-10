@@ -1,7 +1,14 @@
 # Testing Multimapping to the *P. astreoides genome*
 
+Steps:
+1. Map RNAseq data to PAST ab initio genome `.bam` (STAR)
+2. Obtain mapping genome coordinates `genome.fasta` (Stringtie)
+3. Convert to transcript coordinates `transcript.fasta` (gffread)
+4. Map `transcript.fasta` to PAST ab initio genome
 
-## Mapping with HISAT2
+## 1. Map RNAseq data to PAST ab initio genome `.bam`
+
+### Mapping with HISAT2
 
 ```
 mkdir multimapping
@@ -227,3 +234,141 @@ done
 ```
 
 ![ ](https://github.com/hputnam/Past_Genome/blob/master/images/STAR_mapping_stats.png)
+
+
+## 2. Obtain mapping genome coordinates `genome.fasta`
+
+### Stringtie
+
+`mkdir stringtie`
+
+`nano stringtie.sh`
+
+```bash
+#!/bin/bash
+#SBATCH -t 72:00:00
+#SBATCH --nodes=1 --ntasks-per-node=5
+#SBATCH --export=NONE
+#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-user=kevin_wong1@uri.edu
+#SBATCH --account=putnamlab
+#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/multimapping/stringtie
+#SBATCH --cpus-per-task=3
+
+module load StringTie/2.1.4-GCC-9.3.0
+
+# symbolically link to existing directory
+ln -s /data/putnamlab/kevin_wong1/Past_Genome/multimapping/STAR/align_rnaseq/*sortedByCoord.out.bam ./
+
+# Assemble
+array1=($(ls *.bam))
+for i in ${array1[@]}; do
+stringtie -p 48 --rf -e -G /data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1/Pastreoides_all_v1.gff  -o ./${i}.gtf ./${i}
+done
+```
+
+
+3. Convert to transcript coordinates `transcript.fasta` (gffread)
+
+## gffread
+
+`nano gffread.sh`
+
+```bash
+#!/bin/bash
+#SBATCH -t 72:00:00
+#SBATCH --nodes=1 --ntasks-per-node=5
+#SBATCH --export=NONE
+#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-user=kevin_wong1@uri.edu
+#SBATCH --account=putnamlab
+#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/multimapping/stringtie
+#SBATCH --cpus-per-task=3
+
+module load gffread/0.12.7-GCCcore-11.2.0
+
+array1=($(ls *.Aligned.sortedByCoord.out.bam.gtf))
+for i in ${array1[@]}; do
+gffread -w ./${i}.transcripts.fa -g /data/putnamlab/kevin_wong1/Past_Genome/past_filtered_assembly.fasta ./${i}
+done
+```
+
+4. Map `transcript.fasta` to PAST ab initio genome
+
+`cd ../STAR`
+
+`mkdir align_transcripts`
+
+`nano align_transcripts.sh`
+
+```
+#!/bin/bash
+#SBATCH -t 48:00:00
+#SBATCH --nodes=1 --ntasks-per-node=20
+#SBATCH --export=NONE
+#SBATCH --mem=100GB
+#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-user=kevin_wong1@uri.edu
+#SBATCH --account=putnamlab
+#SBATCH --error="Align_STAR_out_error"
+#SBATCH --output="Align_STAR_out"
+#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/multimapping/STAR/align_transcripts
+
+# symbolically link to existing directory
+ln -s /data/putnamlab/kevin_wong1/Past_Genome/multimapping/stringtie/*.fa ./
+
+# Align reads to genome
+module load STAR/2.7.2b-GCC-8.3.0
+
+F=/data/putnamlab/kevin_wong1/Past_Genome/multimapping/STAR/align_transcripts
+
+array1=($(ls $F/*.fa))
+for i in ${array1[@]}
+do
+STAR --runMode alignReads \
+--quantMode TranscriptomeSAM \
+--outTmpDir ${i}_TMP \
+--readFilesIn ${i} \
+--genomeDir /data/putnamlab/kevin_wong1/Past_Genome/multimapping/STAR/GenomeIndex_Past \
+--outSAMtype BAM SortedByCoordinate \
+--outFileNamePrefix ${i}.
+done
+```
+
+
+```
+#!/bin/bash
+#SBATCH -t 48:00:00
+#SBATCH --nodes=1 --ntasks-per-node=20
+#SBATCH --export=NONE
+#SBATCH --mem=100GB
+#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-user=kevin_wong1@uri.edu
+#SBATCH --account=putnamlab
+#SBATCH --error="Align_STAR_out_error"
+#SBATCH --output="Align_STAR_out"
+#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/multimapping/STAR/align_transcripts
+
+# symbolically link to existing directory
+ln -s /data/putnamlab/kevin_wong1/Past_Genome/multimapping/stringtie/*.fa ./
+
+# Align reads to genome
+module load STAR/2.7.2b-GCC-8.3.0
+
+F=/data/putnamlab/kevin_wong1/Past_Genome/multimapping/STAR/align_transcripts
+
+array1=($(ls $F/*.fa))
+for i in ${array1[@]}
+do
+STAR --runMode alignReads \
+--quantMode TranscriptomeSAM \
+--outTmpDir ${i}_TMP \
+--readFilesIn ${i} \
+--genomeDir /data/putnamlab/kevin_wong1/Past_Genome/multimapping/STAR/GenomeIndex_Past \
+--twopassMode Basic \
+--twopass1readsN -1 \
+--outStd Log BAM_Unsorted BAM_Quant \
+--outSAMtype BAM Unsorted SortedByCoordinate \
+--outReadsUnmapped Fastx --outFileNamePrefix ${i}.
+done
+```
