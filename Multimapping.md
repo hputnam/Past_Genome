@@ -236,7 +236,7 @@ done
 ![ ](https://github.com/hputnam/Past_Genome/blob/master/images/STAR_mapping_stats.png)
 
 
-## 2. Obtain mapping genome coordinates `genome.fasta`
+## 2. Obtain mapping genome coordinates using Stringtie
 
 ### Stringtie
 
@@ -268,9 +268,9 @@ done
 ```
 
 
-3. Convert to transcript coordinates `transcript.fasta` (gffread)
+## 3. Convert to transcript coordinates `transcript.fasta` (gffread)
 
-## gffread
+### gffread
 
 `nano gffread.sh`
 
@@ -293,7 +293,9 @@ gffread -w ./${i}.transcripts.fa -g /data/putnamlab/kevin_wong1/Past_Genome/past
 done
 ```
 
-4. Map `transcript.fasta` to PAST ab initio genome
+## 4. Map `transcript.fasta` to PAST ab initio genome
+
+### STAR
 
 `cd ../STAR`
 
@@ -335,40 +337,44 @@ STAR --runMode alignReads \
 done
 ```
 
+`less clean.Sample2.Aligned.sortedByCoord.out.bam.gtf.transcripts.fa.Log.final.out`
 
-```
-#!/bin/bash
-#SBATCH -t 48:00:00
-#SBATCH --nodes=1 --ntasks-per-node=20
-#SBATCH --export=NONE
-#SBATCH --mem=100GB
-#SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user=kevin_wong1@uri.edu
-#SBATCH --account=putnamlab
-#SBATCH --error="Align_STAR_out_error"
-#SBATCH --output="Align_STAR_out"
-#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/multimapping/STAR/align_transcripts
+```bash
+                                 Started job on |       Mar 09 11:30:44
+                             Started mapping on |       Mar 09 11:31:55
+                                    Finished on |       Mar 09 11:31:58
+       Mapping speed, Million of reads per hour |       0.00
 
-# symbolically link to existing directory
-ln -s /data/putnamlab/kevin_wong1/Past_Genome/multimapping/stringtie/*.fa ./
-
-# Align reads to genome
-module load STAR/2.7.2b-GCC-8.3.0
-
-F=/data/putnamlab/kevin_wong1/Past_Genome/multimapping/STAR/align_transcripts
-
-array1=($(ls $F/*.fa))
-for i in ${array1[@]}
-do
-STAR --runMode alignReads \
---quantMode TranscriptomeSAM \
---outTmpDir ${i}_TMP \
---readFilesIn ${i} \
---genomeDir /data/putnamlab/kevin_wong1/Past_Genome/multimapping/STAR/GenomeIndex_Past \
---twopassMode Basic \
---twopass1readsN -1 \
---outStd Log BAM_Unsorted BAM_Quant \
---outSAMtype BAM Unsorted SortedByCoordinate \
---outReadsUnmapped Fastx --outFileNamePrefix ${i}.
-done
+                          Number of input reads |       4
+                      Average input read length |       532
+                                    UNIQUE READS:
+                   Uniquely mapped reads number |       1
+                        Uniquely mapped reads % |       25.00%
+                          Average mapped length |       649.00
+                       Number of splices: Total |       3
+            Number of splices: Annotated (sjdb) |       3
+                       Number of splices: GT/AG |       3
+                       Number of splices: GC/AG |       0
+                       Number of splices: AT/AC |       0
+               Number of splices: Non-canonical |       0
+                      Mismatch rate per base, % |       0.00%
+                         Deletion rate per base |       0.00%
+                        Deletion average length |       0.00
+                        Insertion rate per base |       0.00%
+                       Insertion average length |       0.00
+                             MULTI-MAPPING READS:
+        Number of reads mapped to multiple loci |       2
+             % of reads mapped to multiple loci |       50.00%
+        Number of reads mapped to too many loci |       1
+             % of reads mapped to too many loci |       25.00%
+                                  UNMAPPED READS:
+  Number of reads unmapped: too many mismatches |       0
+       % of reads unmapped: too many mismatches |       0.00%
+            Number of reads unmapped: too short |       0
+                 % of reads unmapped: too short |       0.00%
+                Number of reads unmapped: other |       0
+                     % of reads unmapped: other |       0.00%
+                                  CHIMERIC READS:
+                       Number of chimeric reads |       0
+                            % of chimeric reads |       0.00%
 ```
