@@ -49,3 +49,41 @@ rownames(Past_annotation_full)<-NULL
 
 write_csv(Past_annotation_full, "output/Functional_Annotation/Past_annotation_20220310.csv")
 
+## Finding # of annotations from each database
+
+Past_annotation_full <- read.csv("output/Functional_Annotation/Past_annotation_20220310.csv", check.names = FALSE)
+
+ncbi_blast3 <- Past_annotation_full %>%
+  select(SeqName, BLAST_num_Hits) %>%
+  filter(BLAST_num_Hits != "NA") # 25513
+
+swissprot3 <- Past_annotation_full %>%
+  select(SeqName, SwissProt_num_Hits) %>%
+  filter(SwissProt_num_Hits != "NA") # 30444
+
+trembl3 <- Past_annotation_full %>%
+  select(SeqName, TrEMBL_num_Hits) %>%
+  filter(TrEMBL_num_Hits != "NA") # 24359 
+
+all <- 25513 + 30444 + 24359 
+
+test1 <- semi_join(swissprot3, trembl3) # all swissprot are unique (30444)
+
+test2 <- merge(trembl3, ncbi_blast3, by = "SeqName") # 24359 from trembl
+
+test3 <- 25513 - 24359 # 1154 from NCBI 
+
+all <- 30444 + 24359 + 1154
+none <- 64636 - all
+
+
+allper <- (all/64636)*100 #86.6%
+
+nonper <- 100 - (all/64636)*100 #13.4%, 
+
+SPper <- (30444 / 64636)*100 #47.1%
+TRper <- (24359 / 64636)*100 #37.7%
+NCper <- (1154 / 64636)*100 #1.8%
+
+
+

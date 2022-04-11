@@ -21,12 +21,78 @@ wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/900/290/455/GCA_900290455.1_Pr
 gunzip GCA_900290455.1_Prus_genomic.fna.gz
 ```
 
+Porites australiensis
+* Downloaded 20220408
+* Reference https://academic.oup.com/gbe/article/13/12/evab270/6456307#324156051
+* Link https://drive.google.com/drive/folders/1xZCIAHLmuCcdIQlvDHbN7GGJzxp6VIs0/paus_genome-assembly.fasta.gz
+
+```
+scp -r ./paus_genome-assembly.fasta.gz kevin_wong1@ssh3.hac.uri.edu:/data/putnamlab/kevin_wong1/REFS/Paus/
+scp -r ./paus_mRNA.gff.gz kevin_wong1@ssh3.hac.uri.edu:/data/putnamlab/kevin_wong1/REFS/Paus/
+
+gunzip paus_genome-assembly.fasta.gz
+gunzip paus_mRNA.gff.gz
+```
+
+
+
 ```
 mkdir BUSCO Compare
 cd BUSCO_Compare
 mkdir genomes
 mkdir transcriptomes
 ```
+
+### Porites australiensis genome
+
+`nano BUSCO_aus.sh`
+
+```
+#!/bin/bash
+#SBATCH --job-name="Paus_BUSCO"
+#SBATCH -t 100:00:00
+#SBATCH --export=NONE
+#SBATCH --nodes=1 --ntasks-per-node=20
+#SBATCH --exclusive
+#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-user=kevin_wong1@uri.edu
+#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/BUSCO_Compare/genomes
+#SBATCH --mem=50GB
+
+echo "Starting BUSCO" $(date)
+
+#load modules
+module load BUSCO/5.2.2-foss-2020b
+
+#run BUSCO
+busco --config config.ini \
+-m genome \
+-i /data/putnamlab/kevin_wong1/REFS/Paus/paus_genome-assembly.fasta \
+-o Paus_BUSCO \
+-l /data/putnamlab/kevin_wong1/busco_downloads/metazoa_odb10 \
+--offline
+
+echo "BUSCO Mission complete!" $(date)
+```
+
+```
+# BUSCO version is: 5.2.2
+# The lineage dataset is: metazoa_odb10 (Creation date: 2020-09-10, number of genomes: 65, number of BUSCOs: 954)
+# Summarized benchmarking in BUSCO notation for file /data/putnamlab/kevin_wong1/REFS/Paus/paus_genome-assembly.fasta
+# BUSCO was run in mode: genome
+# Gene predictor used: metaeuk
+
+        ***** Results: *****
+
+        C:89.7%[S:86.6%,D:3.1%],F:5.8%,M:4.5%,n:954        
+        856     Complete BUSCOs (C)                        
+        826     Complete and single-copy BUSCOs (S)        
+        30      Complete and duplicated BUSCOs (D)         
+        55      Fragmented BUSCOs (F)                      
+        43      Missing BUSCOs (M)                         
+        954     Total BUSCO groups searched   
+```
+
 
 ### Porites rus genome
 
