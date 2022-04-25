@@ -1121,7 +1121,7 @@ echo "BUSCO Mission complete!" $(date)
 
 ## Align query protein sequences against databases
 
-1) BLAST the protein sequences against Swiss-Prot
+#### 9. BLAST the protein sequences against Swiss-Prot
 
 `nano swissprot_blast.sh`
 
@@ -1183,25 +1183,6 @@ Then exclude these Gene Model names from your original fasta/.faa/protein file.
 
 `module load kentUtils/416-foss-2020b`
 
-#second use module show command to see paths to certain scripts and softwares in the module
-
-`module show kentUtils/416-foss-2020b`
-
-```
--------------------------------------------------------------------
-/opt/modules/all/kentUtils/416-foss-2020b:
-
-module-whatis     Description: LiftOver, Blat and other utilities
-module-whatis     Homepage: https://hgdownload.soe.ucsc.edu/
-module-whatis     URL: https://hgdownload.soe.ucsc.edu/
-conflict     kentUtils
-prepend-path     CMAKE_PREFIX_PATH /opt/software/kentUtils/416-foss-2020b
-prepend-path     PATH /opt/software/kentUtils/416-foss-2020b/bin
-setenv         EBROOTKENTUTILS /opt/software/kentUtils/416-foss-2020b
-setenv         EBVERSIONKENTUTILS 416
-setenv         EBDEVELKENTUTILS /opt/software/kentUtils/416-foss-2020b/easybuild/kentUtils-416-foss-2020b-easybuild-devel
--------------------------------------------------------------------
-```
 
 I selected to the prepend-path /opt/software/kentUtils/416-foss-2020b/bin to see if it took me to the 'faSomeRecords' script which it did
 
@@ -1251,7 +1232,7 @@ blastp -max_target_seqs 5 \
 echo "STOP" $(date)
 ```
 
-2) BLAST the remaining protein sequences against Trembl
+#### 10. BLAST the remaining protein sequences against Trembl
 
 `nano trembl_blastp.sh`
 
@@ -1373,7 +1354,7 @@ blastp -max_target_seqs 1 \
 echo "STOP" $(date)
 ```
 
-3) BLAST the remaining protein sequences against nr
+#### 11. BLAST the remaining protein sequences against nr
 
 `nano ncbi_blastp_out.sh`
 
@@ -1435,7 +1416,7 @@ echo "STOP" $(date)
 ```
 
 
-## Interproscan
+#### 12. Interproscan
 
 `sbatch Past_InterProScan.sh`
 
@@ -1475,7 +1456,7 @@ interproscan.sh -mode convert -f GFF3 -i Past.interpro.20220113.xml -b Past.inte
 echo "DONE $(date)"
 ```
 
-## Exporting xml Files
+#### Exporting xml Files
 
 SwissProt
 ```
@@ -1497,7 +1478,7 @@ Interproscan
 scp kevin_wong1@ssh3.hac.uri.edu:/data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1/functional_anno_v1/InterProScan/Past.interpro.20220113.xml /Users/kevinwong/Desktop/URI_PHD/Projects/Past_genome/Functional_Annotation_files/
 ```
 
-## Statistics with AGAT
+#### 13. Statistics with AGAT
 
 ``` bash
 [kevin_wong1@n065 Plutea]$ module load AGAT/0.8.1-foss-2020b
