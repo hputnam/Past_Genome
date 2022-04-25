@@ -2,7 +2,7 @@
 
 ## </span>**Table of Contents**</span>
 
-### Structural Annotation
+### [Structural Annotation](https://github.com/hputnam/Past_Genome/blob/master/genome_annotation_pipeline.md#structural-annotation-1)
 
 *Initial MAKER Analysis*
 
@@ -28,13 +28,22 @@
 
 *Assessing completeness*
 
-8. [BUSCO](#8.-BUSCO)
+8. [BUSCO](https://github.com/hputnam/Past_Genome/blob/master/genome_annotation_pipeline.md#8-busco)
 
 
-### Functional Annotation
+### [Functional Annotation](https://github.com/hputnam/Past_Genome/blob/master/genome_annotation_pipeline.md#functional-annotation-1)
 
-1. BLAST the protein sequences against Swiss-Prot
+9. [BLAST protein sequences against Swiss-Prot](https://github.com/hputnam/Past_Genome/blob/master/genome_annotation_pipeline.md#9-blast-the-protein-sequences-against-swiss-prot)
 
+10. [BLAST the remaining protein sequences against Trembl](https://github.com/hputnam/Past_Genome/blob/master/genome_annotation_pipeline.md#10-blast-the-remaining-protein-sequences-against-trembl)
+
+11. [BLAST the remaining protein sequences against nr](https://github.com/hputnam/Past_Genome/blob/master/genome_annotation_pipeline.md#11-blast-the-remaining-protein-sequences-against-nr)
+
+12. [Interproscan](https://github.com/hputnam/Past_Genome/blob/master/genome_annotation_pipeline.md#12-interproscan)
+
+13. [Statistics with AGAT](https://github.com/hputnam/Past_Genome/blob/master/genome_annotation_pipeline.md#13-statistics-with-agat)
+
+# Structural Annotation
 
 ## 1. MAKER Round 1
 
@@ -68,15 +77,15 @@ Maker will align the transcript and protein sequences on the genome sequence to 
 
 **Genome file:**
 - REFERENCE: *Porites astreoides* genome assembly from GeneWiz [(link)](https://github.com/hputnam/Past_Genome/blob/master/De-novo_genome_30-323686303_GENEWIZ_Bioinformatics_Report.pdf)
-- PATH: /data/putnamlab/kevin_wong1/Past_Genome/past_filtered_assembly.fasta
+- PATH: {PATH}/past_filtered_assembly.fasta
 
 **Transcriptome file:**
 - REFERENCE: *Porites astreoides* transcriptome (Florida Keys) from [Kenkel et al. 2013](https://onlinelibrary.wiley.com/doi/abs/10.1111/mec.12390) [(FASTA link)](https://matzlab.weebly.com/data--code.html)
-- PATH: /data/putnamlab/kevin_wong1/Past_Genome/refs/Kenkel2013_past_transcriptome.fasta
+- PATH: {FILE_PATH}/refs/Kenkel2013_past_transcriptome.fasta
 
 **Protein file:**
 - REFERENCE: *Porites lutea* from [Robbins et al. 2019](https://www.nature.com/articles/s41564-019-0532-4) [(FASTA link)](http://plut.reefgenomics.org/download/)
-- PATH: /data/putnamlab/kevin_wong1/Past_Genome/refs/plut2v1.1.proteins.fasta
+- PATH: {FILE_PATH}/refs/plut2v1.1.proteins.fasta
 
 #### MAKER control files
 The first thing is to create new control files for your MAKER run. The control files tell MAKER how to run and where to find additional software such as different gene callers.
@@ -104,7 +113,7 @@ For MAKER to run, modify the following with the appropriate paths:
 
 ```bash
 #-----Genome (these are always required)
-genome=/data/putnamlab/kevin_wong1/Past_Genome/past_filtered_assembly.fasta #genome sequence (fasta file or fasta embeded in GFF3 file)
+genome={FILE_PATH}/past_filtered_assembly.fasta #genome sequence (fasta file or fasta embeded in GFF3 file)
 organism_type=eukaryotic #eukaryotic or prokaryotic. Default is eukaryotic
 
 #-----Re-annotation Using MAKER Derived GFF3
@@ -118,13 +127,13 @@ pred_pass=0 #use ab-initio predictions in maker_gff: 1 = yes, 0 = no
 other_pass=0 #passthrough anyything else in maker_gff: 1 = yes, 0 = no
 
 #-----EST Evidence (for best results provide a file for at least one)
-est=/data/putnamlab/kevin_wong1/Past_Genome/refs/Kenkel2013_past_transcriptome.fasta #set of ESTs or assembled mRNA-seq in fasta format
+est={FILE_PATH}/refs/Kenkel2013_past_transcriptome.fasta #set of ESTs or assembled mRNA-seq in fasta format
 altest= #EST/cDNA sequence file in fasta format from an alternate organism
 est_gff= #aligned ESTs or mRNA-seq from an external GFF3 file
 altest_gff= #aligned ESTs from a closly relate species in GFF3 format
 
 #-----Protein Homology Evidence (for best results provide a file for at least one)
-protein=/data/putnamlab/kevin_wong1/Past_Genome/refs/plut2v1.1.proteins.fasta  #protein sequence file in fasta format (i.e. from mutiple or$
+protein={FILE_PATH}/refs/plut2v1.1.proteins.fasta  #protein sequence file in fasta format (i.e. from mutiple or$
 protein_gff=  #aligned protein homology evidence from an external GFF3 file
 
 maxdnalength=300000 #previously 1000000
@@ -139,8 +148,8 @@ maxdnalength=300000 #previously 1000000
 #SBATCH --export=NONE
 #SBATCH --exclusive
 #SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user=kevin_wong1@uri.edu
-#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/maker_rnd1.1
+#SBATCH --mail-user={EMAIL}
+#SBATCH -D {FILE_PATH}/maker_rnd1.1
 #SBATCH --mem=250GB
 
 module load maker/3.01.03
@@ -171,8 +180,8 @@ All contigs were completed successfully (Started and finished)
 #SBATCH --export=NONE
 #SBATCH --exclusive
 #SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user=kevin_wong1@uri.edu
-#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/maker_rnd1.1/Rnd1.maker.output
+#SBATCH --mail-user={EMAIL}
+#SBATCH -D {PATH}/maker_rnd1.1/Rnd1.maker.output
 #SBATCH --mem=100GB
 
 module load maker/3.01.03
@@ -205,8 +214,8 @@ https://github.com/KorfLab/SNAP
 #SBATCH --export=NONE
 #SBATCH --exclusive
 #SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user=kevin_wong1@uri.edu
-#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/snap_1
+#SBATCH --mail-user={EMAIL}
+#SBATCH -D {PATH}/snap_1
 #SBATCH --mem=100GB
 
 module load SNAP/2013-11-29-GCC-8.3.0
@@ -237,8 +246,8 @@ First, we have to create training sequences from the MAKER round 1 output.
 #SBATCH --export=NONE
 #SBATCH --nodes=1 --ntasks-per-node=20
 #SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user=kevin_wong1@uri.edu
-#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/aug_training_1
+#SBATCH --mail-user={EMAIL}
+#SBATCH -D {PATH}/aug_training_1
 #SBATCH --mem=100GB
 
 module load BEDTools/2.30.0-GCC-10.2.0
@@ -256,7 +265,7 @@ Since I do not have permissions to write to the server AUGUSTUS config path, I h
 ```bash
 cd /opt/software/AUGUSTUS/3.4.0-foss-2020b/
 
-cp -r config /data/putnamlab/kevin_wong1/Past_Genome/aug_training_1/
+cp -r config {PATH}/aug_training_1/
 ```
 ### Running AUGUSTUS training script
 
@@ -269,8 +278,8 @@ cp -r config /data/putnamlab/kevin_wong1/Past_Genome/aug_training_1/
 #SBATCH --export=NONE
 #SBATCH --nodes=1 --ntasks-per-node=20
 #SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user=kevin_wong1@uri.edu
-#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/aug_training_1
+#SBATCH --mail-user={EMAIL}
+#SBATCH -D {PATH}/aug_training_1
 #SBATCH --mem=500GB
 #SBATCH --exclusive
 
@@ -280,7 +289,7 @@ echo "Starting BUSCO" $(date)
 module load BUSCO/5.2.2-foss-2020b
 
 #locating AUGUSTUS config path
-export AUGUSTUS_CONFIG_PATH=/data/putnamlab/kevin_wong1/Past_Genome/aug_training_1/config
+export AUGUSTUS_CONFIG_PATH={PATH}/aug_training_1/config
 
 #run BUSCO
 busco \
@@ -298,13 +307,13 @@ busco \
 echo "BUSCO Mission complete!" $(date)
 ```
 
-`sbatch /data/putnamlab/kevin_wong1/Past_Genome/aug_training_1/aug_training1.sh`
+`sbatch {PATH}/aug_training_1/aug_training1.sh`
 
 ### Renaming and moving AUGUSTUS training outputs into the species folder
 
 The directory where the AUGUSTUS outputs are:
 
-`ls /data/putnamlab/kevin_wong1/Past_Genome/aug_training_1/past_rnd1_maker/run_metazoa_odb10/augustus_output/retraining_parameters/BUSCO_past_rnd1_maker`
+`ls {PATH}/aug_training_1/past_rnd1_maker/run_metazoa_odb10/augustus_output/retraining_parameters/BUSCO_past_rnd1_maker`
 
 ```bash
 BUSCO_past_rnd1_maker_exon_probs.pbl    
@@ -331,7 +340,7 @@ README.TXT
 
 Making a new species folder in the AUGUSTUS config path:
 
-`mkdir /data/putnamlab/kevin_wong1/Past_Genome/aug_training_1/config/species/porites_astreoides1`
+`mkdir {PATH}/aug_training_1/config/species/porites_astreoides1`
 
 Copying all files over to the new species folder:
 
@@ -361,7 +370,7 @@ Now these files can be accessed by MAKER
 
 ### Need to create gff files from the first round of MAKER to input into the second round.
 
-`/data/putnamlab/kevin_wong1/Past_Genome/maker_rnd1.1/Rnd1.maker.output`
+`{PATH}/maker_rnd1.1/Rnd1.maker.output`
 
 ```bash
 # transcript alignments
@@ -386,7 +395,7 @@ maker -CTL
 
 ```bash
 #-----Genome (these are always required)
-genome=/data/putnamlab/kevin_wong1/Past_Genome/past_filtered_assembly.fasta #genome sequence (fasta file or fasta embeded in GFF3 file)
+genome={PATH}/past_filtered_assembly.fasta #genome sequence (fasta file or fasta embeded in GFF3 file)
 organism_type=eukaryotic #eukaryotic or prokaryotic. Default is eukaryotic
 
 #-----Re-annotation Using MAKER Derived GFF3
@@ -402,23 +411,23 @@ other_pass=0 #passthrough anyything else in maker_gff: 1 = yes, 0 = no
 #-----EST Evidence (for best results provide a file for at least one)
 est= #set of ESTs or assembled mRNA-seq in fasta format
 altest= #EST/cDNA sequence file in fasta format from an alternate organism
-est_gff=/data/putnamlab/kevin_wong1/Past_Genome/maker_rnd1.1/Rnd1.maker.output/Rnd1.all.maker.est2genome.gff #aligned ESTs or mRNA-seq from an external GFF3 file
+est_gff={PATH}/maker_rnd1.1/Rnd1.maker.output/Rnd1.all.maker.est2genome.gff #aligned ESTs or mRNA-seq from an external GFF3 file
 altest_gff= #aligned ESTs from a closly relate species in GFF3 format
 
 #-----Protein Homology Evidence (for best results provide a file for at least one)
 protein=  #protein sequence file in fasta format (i.e. from mutiple organisms)
-protein_gff=/data/putnamlab/kevin_wong1/Past_Genome/maker_rnd1.1/Rnd1.maker.output/Rnd1.all.maker.protein2genome.gff  #aligned protein homology evidence from an external GFF3 file
+protein_gff={PATH}/maker_rnd1.1/Rnd1.maker.output/Rnd1.all.maker.protein2genome.gff  #aligned protein homology evidence from an external GFF3 file
 
 #-----Repeat Masking (leave values blank to skip repeat masking)
 model_org=all #select a model organism for RepBase masking in RepeatMasker
 rmlib= #provide an organism specific repeat library in fasta format for RepeatMasker
 repeat_protein= #provide a fasta file of transposable element proteins for RepeatRunner
-rm_gff=/data/putnamlab/kevin_wong1/Past_Genome/maker_rnd1.1/Rnd1.maker.output/Rnd1.all.maker.repeats.gff #pre-identified repeat elements from an external GFF3 file
+rm_gff={PATH}/maker_rnd1.1/Rnd1.maker.output/Rnd1.all.maker.repeats.gff #pre-identified repeat elements from an external GFF3 file
 prok_rm=0 #forces MAKER to repeatmask prokaryotes (no reason to change this), 1 = yes, 0 = no
 softmask=1 #use soft-masking rather than hard-masking in BLAST (i.e. seg and dust filtering)
 
 #-----Gene Prediction
-snaphmm=/data/putnamlab/kevin_wong1/Past_Genome/past1.hmm #SNAP HMM file
+snaphmm={PATH}/past1.hmm #SNAP HMM file
 gmhmm= #GeneMark HMM file
 augustus_species=porites_astreoides1 #Augustus gene prediction species model
 fgenesh_par_file= #FGENESH parameter file
@@ -509,15 +518,15 @@ probuild= #location of probuild executable (required for genemark)
 #SBATCH -t 500:00:00
 #SBATCH --export=NONE
 #SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user=kevin_wong1@uri.edu
-#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/maker_rnd2.1
+#SBATCH --mail-user={EMAIL}
+#SBATCH -D {PATH}/maker_rnd2.1
 #SBATCH --mem=120GB
 #SBATCH --exclusive
 
 module load maker/3.01.03-foss-2020b
 
 #locating AUGUSTUS config path
-export AUGUSTUS_CONFIG_PATH=/data/putnamlab/kevin_wong1/Past_Genome/aug_training_1/config
+export AUGUSTUS_CONFIG_PATH={PATH}/aug_training_1/config
 
 #Running maker with MPI
 maker -cpus $SLURM_CPUS_ON_NODE -base Rnd2.1 maker_opts.ctl maker_bopts.ctl maker_exe.ctl
@@ -542,8 +551,8 @@ All contigs were completed successfully (Started and finished)
 #SBATCH --export=NONE
 #SBATCH --exclusive
 #SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user=kevin_wong1@uri.edu
-#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/maker_rnd2.1/Rnd2.1.maker.output
+#SBATCH --mail-user={EMAIL}
+#SBATCH -D {PATH}/maker_rnd2.1/Rnd2.1.maker.output
 #SBATCH --mem=100GB
 
 module load maker/3.01.03
@@ -576,8 +585,8 @@ https://github.com/KorfLab/SNAP
 #SBATCH --export=NONE
 #SBATCH --exclusive
 #SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user=kevin_wong1@uri.edu
-#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/snap_2
+#SBATCH --mail-user={EMAIL}
+#SBATCH -D {PATH}/snap_2
 #SBATCH --mem=100GB
 
 module load SNAP/2013-11-29-GCC-8.3.0
@@ -610,8 +619,8 @@ First, we have to create training sequences from the MAKER round 2 output.
 #SBATCH --export=NONE
 #SBATCH --nodes=1 --ntasks-per-node=20
 #SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user=kevin_wong1@uri.edu
-#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/aug_training_2
+#SBATCH --mail-user={EMAIL}
+#SBATCH -D {PATH}/aug_training_2
 #SBATCH --mem=100GB
 
 module load BEDTools/2.30.0-GCC-10.2.0
@@ -629,11 +638,11 @@ Since I do not have permissions to write to the server AUGUSTUS config path, I h
 ```bash
 cd /opt/software/AUGUSTUS/3.4.0-foss-2020b/
 
-cp -r config /data/putnamlab/kevin_wong1/Past_Genome/aug_training_2/
+cp -r config {PATH}/aug_training_2/
 
-cp /data/putnamlab/kevin_wong1/Past_Genome/aug_training_1/config.ini /data/putnamlab/kevin_wong1/Past_Genome/aug_training_2/
+cp {PATH}/aug_training_1/config.ini {PATH}/aug_training_2/
 
-cp -r /data/putnamlab/kevin_wong1/Past_Genome/aug_training_1/busco_downloads /data/putnamlab/kevin_wong1/Past_Genome/aug_training_2/
+cp -r {PATH}/aug_training_1/busco_downloads {PATH}/aug_training_2/
 ```
 ### Running AUGUSTUS training script
 
@@ -646,8 +655,8 @@ cp -r /data/putnamlab/kevin_wong1/Past_Genome/aug_training_1/busco_downloads /da
 #SBATCH --export=NONE
 #SBATCH --nodes=1 --ntasks-per-node=20
 #SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user=kevin_wong1@uri.edu
-#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/aug_training_2
+#SBATCH --mail-user={EMAIL}
+#SBATCH -D {PATH}/aug_training_2
 #SBATCH --mem=500GB
 #SBATCH --exclusive
 
@@ -657,7 +666,7 @@ echo "Starting BUSCO" $(date)
 module load BUSCO/5.2.2-foss-2020b
 
 #locating AUGUSTUS config path
-export AUGUSTUS_CONFIG_PATH=/data/putnamlab/kevin_wong1/Past_Genome/aug_training_2/config
+export AUGUSTUS_CONFIG_PATH={PATH}/aug_training_2/config
 
 #run BUSCO
 busco \
@@ -675,14 +684,14 @@ busco \
 echo "BUSCO Mission complete!" $(date)
 ```
 
-`sbatch /data/putnamlab/kevin_wong1/Past_Genome/aug_training_2/aug_training2.sh`
+`sbatch {PATH}/aug_training_2/aug_training2.sh`
 
 
 ### Renaming and moving AUGUSTUS training outputs into the species folder
 
 The directory where the AUGUSTUS outputs are:
 
-`ls /data/putnamlab/kevin_wong1/Past_Genome/aug_training_2/past_rnd2_maker/run_metazoa_odb10/augustus_output/retraining_parameters/BUSCO_past_rnd2_maker`
+`ls {PATH}/aug_training_2/past_rnd2_maker/run_metazoa_odb10/augustus_output/retraining_parameters/BUSCO_past_rnd2_maker`
 
 ```bash
 BUSCO_past_rnd2_maker_exon_probs.pbl    
@@ -698,7 +707,7 @@ BUSCO_past_rnd2_maker_parameters.cfg.orig1
 
 Making a new species folder in the AUGUSTUS config path:
 
-`mkdir /data/putnamlab/kevin_wong1/Past_Genome/aug_training_2/config/species/porites_astreoides2`
+`mkdir {PATH}/aug_training_2/config/species/porites_astreoides2`
 
 Copying all files over to the new species folder:
 
@@ -725,7 +734,7 @@ Now these files can be accessed by MAKER
 
 ### Need to create gff files from the first round of MAKER to input into the second round.
 
-`/data/putnamlab/kevin_wong1/Past_Genome/maker_rnd2.1/Rnd2.1.maker.output`
+`{PATH}/maker_rnd2.1/Rnd2.1.maker.output`
 
 ```bash
 # transcript alignments
@@ -750,7 +759,7 @@ maker -CTL
 
 ```bash
 #-----Genome (these are always required)
-genome=/data/putnamlab/kevin_wong1/Past_Genome/past_filtered_assembly.fasta #genome sequence (fasta file or fasta embeded in GFF3 file)
+genome={PATH}/past_filtered_assembly.fasta #genome sequence (fasta file or fasta embeded in GFF3 file)
 organism_type=eukaryotic #eukaryotic or prokaryotic. Default is eukaryotic
 
 #-----Re-annotation Using MAKER Derived GFF3
@@ -766,23 +775,23 @@ other_pass=0 #passthrough anyything else in maker_gff: 1 = yes, 0 = no
 #-----EST Evidence (for best results provide a file for at least one)
 est= #set of ESTs or assembled mRNA-seq in fasta format
 altest= #EST/cDNA sequence file in fasta format from an alternate organism
-est_gff=/data/putnamlab/kevin_wong1/Past_Genome/maker_rnd2.1/Rnd2.1.maker.output/Rnd2.1.all.maker.est2genome.gff #aligned ESTs or mRNA-seq from an external GFF3 file
+est_gff={PATH}/maker_rnd2.1/Rnd2.1.maker.output/Rnd2.1.all.maker.est2genome.gff #aligned ESTs or mRNA-seq from an external GFF3 file
 altest_gff= #aligned ESTs from a closly relate species in GFF3 format
 
 #-----Protein Homology Evidence (for best results provide a file for at least one)
 protein=  #protein sequence file in fasta format (i.e. from mutiple organisms)
-protein_gff=/data/putnamlab/kevin_wong1/Past_Genome/maker_rnd2.1/Rnd2.1.maker.output/Rnd2.1.all.maker.protein2genome.gff  #aligned protein homology evidence from an external GFF3 file
+protein_gff={PATH}/maker_rnd2.1/Rnd2.1.maker.output/Rnd2.1.all.maker.protein2genome.gff  #aligned protein homology evidence from an external GFF3 file
 
 #-----Repeat Masking (leave values blank to skip repeat masking)
 model_org=all #select a model organism for RepBase masking in RepeatMasker
 rmlib= #provide an organism specific repeat library in fasta format for RepeatMasker
 repeat_protein= #provide a fasta file of transposable element proteins for RepeatRunner
-rm_gff=/data/putnamlab/kevin_wong1/Past_Genome/maker_rnd2.1/Rnd2.1.maker.output/Rnd2.1.all.maker.repeats.gff #pre-identified repeat elements from an external GFF3 file
+rm_gff={PATH}/maker_rnd2.1/Rnd2.1.maker.output/Rnd2.1.all.maker.repeats.gff #pre-identified repeat elements from an external GFF3 file
 prok_rm=0 #forces MAKER to repeatmask prokaryotes (no reason to change this), 1 = yes, 0 = no
 softmask=1 #use soft-masking rather than hard-masking in BLAST (i.e. seg and dust filtering)
 
 #-----Gene Prediction
-snaphmm=/data/putnamlab/kevin_wong1/Past_Genome/snap_2/past2.hmm #SNAP HMM file
+snaphmm={PATH}/snap_2/past2.hmm #SNAP HMM file
 gmhmm= #GeneMark HMM file
 augustus_species=porites_astreoides2 #Augustus gene prediction species model
 fgenesh_par_file= #FGENESH parameter file
@@ -873,15 +882,15 @@ probuild= #location of probuild executable (required for genemark)
 #SBATCH -t 500:00:00
 #SBATCH --export=NONE
 #SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user=kevin_wong1@uri.edu
-#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/maker_rnd3
+#SBATCH --mail-user={EMAIL}
+#SBATCH -D {PATH}/maker_rnd3
 #SBATCH --mem=120GB
 #SBATCH --exclusive
 
 module load maker/3.01.03-foss-2020b
 
 #locating AUGUSTUS config path
-export AUGUSTUS_CONFIG_PATH=/data/putnamlab/kevin_wong1/Past_Genome/aug_training_2/config
+export AUGUSTUS_CONFIG_PATH={PATH}/aug_training_2/config
 
 #Running maker
 maker -cpus $SLURM_CPUS_ON_NODE -base Rnd3 maker_opts.ctl maker_bopts.ctl maker_exe.ctl
@@ -906,8 +915,8 @@ All contigs were completed successfully (Started and finished)
 #SBATCH --export=NONE
 #SBATCH --exclusive
 #SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user=kevin_wong1@uri.edu
-#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/maker_rnd3/Rnd3.maker.output
+#SBATCH --mail-user={EMAIL}
+#SBATCH -D {PATH}/maker_rnd3/Rnd3.maker.output
 #SBATCH --mem=100GB
 
 module load maker/3.01.03
@@ -946,8 +955,8 @@ cp Rnd3.all.maker.transcripts.fasta ../../past_struc_annotations_v1/
 #SBATCH --export=NONE
 #SBATCH --exclusive
 #SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user=kevin_wong1@uri.edu
-#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1
+#SBATCH --mail-user={EMAIL}
+#SBATCH -D {PATH}/past_struc_annotations_v1
 #SBATCH --mem=100GB
 
 module load maker/3.01.03
@@ -980,7 +989,7 @@ echo "Mission complete." $(date)
 #### Round 1
 
 ```bash
-cd /data/putnamlab/kevin_wong1/Past_Genome/maker_rnd1.1/Rnd1.maker.output
+cd {PATH}/maker_rnd1.1/Rnd1.maker.output
 
 cat Rnd1.all.gff | awk '{ if ($3 == "gene") print $0 }' | awk '{ sum += ($5 - $4) } END { print NR, sum / NR }'
 ```
@@ -991,7 +1000,7 @@ cat Rnd1.all.gff | awk '{ if ($3 == "gene") print $0 }' | awk '{ sum += ($5 - $4
 #### Round 2
 
 ```bash
-cd /data/putnamlab/kevin_wong1/Past_Genome/maker_rnd2.1/Rnd2.1.maker.output
+cd {PATH}/maker_rnd2.1/Rnd2.1.maker.output
 
 cat Rnd2.1.all.gff | awk '{ if ($3 == "gene") print $0 }' | awk '{ sum += ($5 - $4) } END { print NR, sum / NR }'
 ```
@@ -1002,7 +1011,7 @@ cat Rnd2.1.all.gff | awk '{ if ($3 == "gene") print $0 }' | awk '{ sum += ($5 - 
 #### Round 3
 
 ```bash
-cd /data/putnamlab/kevin_wong1/Past_Genome/maker_rnd3/Rnd3.maker.output
+cd {PATH}/maker_rnd3/Rnd3.maker.output
 
 cat Rnd3.all.gff | awk '{ if ($3 == "gene") print $0 }' | awk '{ sum += ($5 - $4) } END { print NR, sum / NR }'
 ```
@@ -1044,8 +1053,8 @@ grep -c ">" Pastreoides_proteins_v1.fasta
 #SBATCH --nodes=1 --ntasks-per-node=20
 #SBATCH --exclusive
 #SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user=kevin_wong1@uri.edu
-#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1
+#SBATCH --mail-user={EMAIL}
+#SBATCH -D {PATH}/past_struc_annotations_v1
 #SBATCH --mem=50GB
 
 echo "Starting BUSCO" $(date)
@@ -1086,8 +1095,8 @@ BUSCO Output
 #SBATCH --export=NONE
 #SBATCH --nodes=1 --ntasks-per-node=20
 #SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user=kevin_wong1@uri.edu
-#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1
+#SBATCH --mail-user={EMAIL}
+#SBATCH -D {PATH}/past_struc_annotations_v1
 #SBATCH --mem=500GB
 #SBATCH --exclusive
 
@@ -1097,14 +1106,14 @@ echo "Starting BUSCO" $(date)
 module load BUSCO/5.2.2-foss-2020b
 
 #locating AUGUSTUS config path
-export AUGUSTUS_CONFIG_PATH=/data/putnamlab/kevin_wong1/Past_Genome/aug_training_2/config
+export AUGUSTUS_CONFIG_PATH={PATH}/aug_training_2/config
 
 #run BUSCO
 busco \
---config /data/putnamlab/kevin_wong1/Past_Genome/aug_training_2/config.ini \
+--config {PATH}/aug_training_2/config.ini \
 --in Pastreoides_transcripts_v1.fasta \
 -o annotation_eval \
--l /data/putnamlab/kevin_wong1/Past_Genome/aug_training_2/busco_downloads/metazoa_odb10 \
+-l {PATH}/aug_training_2/busco_downloads/metazoa_odb10 \
 -m transcriptome \
 -f \
 --long \
@@ -1131,11 +1140,11 @@ echo "BUSCO Mission complete!" $(date)
 #SBATCH -t 240:00:00
 #SBATCH --export=NONE
 #SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user=kevin_wong1@uri.edu
+#SBATCH --mail-user={EMAIL}
 #SBATCH --mem=100GB
 #SBATCH --error="swissprot_blastp_out_error"
 #SBATCH --output="swissprot_blastp_out"
-#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1/functional_anno_v1  
+#SBATCH -D {PATH}/past_struc_annotations_v1/functional_anno_v1  
 #SBATCH --exclusive
 
 echo "START" $(date)
@@ -1145,8 +1154,8 @@ echo "Blast against swissprot database" $(date)
 
 blastp -max_target_seqs 5 \
 -num_threads 20 \
--db /data/putnamlab/shared/databases/swiss_db/swissprot_20211022 \
--query /data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1/Pastreoides_proteins_v1.fasta \
+-db {PATH}/databases/swiss_db/swissprot_20211022 \
+-query {PATH}/past_struc_annotations_v1/Pastreoides_proteins_v1.fasta \
 -evalue 1e-5 \
 -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen' \
 -out PastGeneModels_vs_sprot_1e-5_max5.out
@@ -1191,7 +1200,7 @@ I selected to the prepend-path /opt/software/kentUtils/416-foss-2020b/bin to see
 I then ran the -exclude command to exclude the blasted Gene Models from the .faa file
 
 ```
-/opt/software/kentUtils/416-foss-2020b/bin/faSomeRecords -exclude /data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1/Pastreoides_proteins_v1.fasta list_of_Pastgenemodelproteins_sprot.txt Past_proteins_names_v1.0.faa.prot4trembl
+/opt/software/kentUtils/416-foss-2020b/bin/faSomeRecords -exclude {PATH}/past_struc_annotations_v1/Pastreoides_proteins_v1.fasta list_of_Pastgenemodelproteins_sprot.txt Past_proteins_names_v1.0.faa.prot4trembl
 ```
 
 Checking the number of Gene Models:
@@ -1210,12 +1219,12 @@ Downloading the .xml file for Blast2Go
 #SBATCH -t 240:00:00
 #SBATCH --export=NONE
 #SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user=kevin_wong1@uri.edu
+#SBATCH --mail-user={EMAIL}
 #SBATCH --mem=100GB
 #SBATCH --error="xml_blastp_out_error"
 #SBATCH --output="xml_blastp_out"
 #SBATCH --exclusive
-#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1/functional_anno_v1  
+#SBATCH -D {PATH}/past_struc_annotations_v1/functional_anno_v1  
 
 echo "START" $(date)
 module load BLAST+/2.11.0-gompi-2020b #load blast module
@@ -1223,8 +1232,8 @@ module load BLAST+/2.11.0-gompi-2020b #load blast module
 echo "Blast against swissprot database with xml format out" $(date)
 blastp -max_target_seqs 5 \
 -num_threads 20 \
--db /data/putnamlab/shared/databases/swiss_db/swissprot_20211022 \
--query /data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1/Pastreoides_proteins_v1.fasta \
+-db {PATH}/databases/swiss_db/swissprot_20211022 \
+-query {PATH}/past_struc_annotations_v1/Pastreoides_proteins_v1.fasta \
 -evalue 1e-5 \
 -outfmt '5 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen' \
 -out PastGeneModels_maxhit.xml
@@ -1242,12 +1251,12 @@ echo "STOP" $(date)
 #SBATCH -t 240:00:00
 #SBATCH --export=NONE
 #SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user=kevin_wong1@uri.edu
+#SBATCH --mail-user={EMAIL}
 #SBATCH --mem=100GB
 #SBATCH --error="trembl_blastp_out_error"
 #SBATCH --output="trembl_blastp_out"
 #SBATCH --exclusive
-#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1/functional_anno_v1
+#SBATCH -D {PATH}/past_struc_annotations_v1/functional_anno_v1
 
 echo "START" $(date)
 module load BLAST+/2.11.0-gompi-2020b #load blast module
@@ -1255,7 +1264,7 @@ module load BLAST+/2.11.0-gompi-2020b #load blast module
 echo "Blast against trembl database" $(date)
 blastp -max_target_seqs 5 \
 -num_threads 20 \
--db /data/putnamlab/shared/databases/trembl_db/trembl_20211022 \
+-db {PATH}/databases/trembl_db/trembl_20211022 \
 -query Past_proteins_names_v1.0.faa.prot4trembl \
 -evalue 1e-5 \
 -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen' \
@@ -1272,12 +1281,12 @@ echo "STOP" $(date)
 #SBATCH -t 240:00:00
 #SBATCH --export=NONE
 #SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user=kevin_wong1@uri.edu
+#SBATCH --mail-user={EMAIL}
 #SBATCH --mem=100GB
 #SBATCH --error="trembl_hit1_blastp_out_error"
 #SBATCH --output="trembl_hit1_blastp_out"
 #SBATCH --exclusive
-#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1/functional_anno_v1
+#SBATCH -D {PATH}/past_struc_annotations_v1/functional_anno_v1
 #SBATCH -c 36
 
 echo "START" $(date)
@@ -1286,7 +1295,7 @@ module load BLAST+/2.11.0-gompi-2020b #load blast module
 echo "Blast against trembl database" $(date)
 blastp -max_target_seqs 1 \
 -num_threads 20 \
--db /data/putnamlab/shared/databases/trembl_db/trembl_20211022 \
+-db {PATH}/databases/trembl_db/trembl_20211022 \
 -query Past_proteins_names_v1.0.faa.prot4trembl \
 -evalue 1e-5 \
 -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen' \
@@ -1333,7 +1342,7 @@ grep -c ">" Past_proteins_names_v1.0.faa.prot4nr #9624
 #SBATCH -t 240:00:00
 #SBATCH --export=NONE
 #SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user=kevin_wong1@uri.edu
+#SBATCH --mail-user={EMAIL}
 #SBATCH --mem=100GB
 #SBATCH --error="xml_blastp_out_terror"
 #SBATCH --output="xml_blastp_tout"
@@ -1345,7 +1354,7 @@ module load BLAST+/2.11.0-gompi-2020b #load blast module
 echo "Blast against trembl database for xml" $(date)
 blastp -max_target_seqs 1 \
 -num_threads 20 \
--db /data/putnamlab/shared/databases/trembl_db/trembl_20211022 \
+-db {PATH}/databases/trembl_db/trembl_20211022 \
 -query Past_proteins_names_v1.0.faa.prot4trembl \
 -evalue 1e-5 \
 -outfmt '5 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen' \
@@ -1364,7 +1373,7 @@ echo "STOP" $(date)
 #SBATCH -t 240:00:00
 #SBATCH --export=NONE
 #SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user=kevin_wong1@uri.edu
+#SBATCH --mail-user={EMAIL}
 #SBATCH --mem=100GB
 #SBATCH --error="ncbi_blastp_out_error"
 #SBATCH --output="ncbi_blastp_out"
@@ -1394,7 +1403,7 @@ echo "STOP" $(date)
 #SBATCH -t 240:00:00
 #SBATCH --export=NONE
 #SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user=kevin_wong1@uri.edu
+#SBATCH --mail-user={EMAIL}
 #SBATCH --mem=100GB
 #SBATCH --error="ncbi_blastp_out_error"
 #SBATCH --output="ncbi_blastp_out"
@@ -1426,12 +1435,12 @@ echo "STOP" $(date)
 #SBATCH -t 30-00:00:00
 #SBATCH --export=NONE
 #SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user=kevin_wong1@uri.edu
+#SBATCH --mail-user={EMAIL}
 #SBATCH --mem=100GB
 #SBATCH --error="interproscan_out_error"
 #SBATCH --output="interproscan_out"
 #SBATCH --exclusive
-#SBATCH -D /data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1/functional_anno_v1/InterProScan
+#SBATCH -D {PATH}/past_struc_annotations_v1/functional_anno_v1/InterProScan
 
 echo "START $(date)"
 
@@ -1442,7 +1451,7 @@ java -version
 
 interproscan.sh --cpu $SLURM_CPUS_ON_NODE ...
 interproscan.sh -version
-interproscan.sh -f XML -i /data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1/Pastreoides_proteins_v1.fasta -b Past.interpro.20220113  -iprlookup -goterms -pa
+interproscan.sh -f XML -i {PATH}/past_struc_annotations_v1/Pastreoides_proteins_v1.fasta -b Past.interpro.20220113  -iprlookup -goterms -pa
 interproscan.sh -mode convert -f GFF3 -i Past.interpro.20220113.xml -b Past.interpro.20220113
 
 # -i is the input data
@@ -1456,33 +1465,17 @@ interproscan.sh -mode convert -f GFF3 -i Past.interpro.20220113.xml -b Past.inte
 echo "DONE $(date)"
 ```
 
-#### Exporting xml Files
-
-SwissProt
-```
-scp kevin_wong1@ssh3.hac.uri.edu:/data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1/functional_anno_v1/PastGeneModels_maxhit.xml /Users/kevinwong/Desktop/URI_PHD/Projects/Past_genome/Functional_Annotation_files/
-```
-
-nr
-```
-scp kevin_wong1@ssh3.hac.uri.edu:/data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1/functional_anno_v1/PastGeneModels_ncbi.xml /Users/kevinwong/Desktop/URI_PHD/Projects/Past_genome/Functional_Annotation_files/
-```
-
-trembl
-```
-scp kevin_wong1@ssh3.hac.uri.edu:/data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1/functional_anno_v1/Past_protein_blastp_trembl.xml /Users/kevinwong/Desktop/URI_PHD/Projects/Past_genome/Functional_Annotation_files/
-```
-
-Interproscan
-```
-scp kevin_wong1@ssh3.hac.uri.edu:/data/putnamlab/kevin_wong1/Past_Genome/past_struc_annotations_v1/functional_anno_v1/InterProScan/Past.interpro.20220113.xml /Users/kevinwong/Desktop/URI_PHD/Projects/Past_genome/Functional_Annotation_files/
-```
 
 #### 13. Statistics with AGAT
 
-``` bash
-[kevin_wong1@n065 Plutea]$ module load AGAT/0.8.1-foss-2020b
-[kevin_wong1@n065 Plutea]$ agat_sp_statistics.pl --gff plut2v1.1.genes.gff3
+#### Porites lutea
+
+`module load AGAT/0.8.1-foss-2020b`
+
+`agat_sp_statistics.pl --gff plut2v1.1.genes.gff3`
+
+
+```bash
 Reading file plut2v1.1.genes.gff3
 Parsing: 100% [======================================================]D 0h01m12sParsing Finished
 Compute statistics
@@ -1657,8 +1650,12 @@ Shortest intron into three_prime_utr part    20
 Bye Bye.
 ```
 
+
+#### Porites astreoides
+
+`agat_sp_statistics.pl --gff Pastreoides_all_v1.gff`
+
 ```bash
-[kevin_wong1@n065 past_struc_annotations_v1]$ agat_sp_statistics.pl --gff Pastreoides_all_v1.gff
 Reading file Pastreoides_all_v1.gff
 Parsing: 100% [======================================================]D 0h10m33sParsing Finished
 Compute statistics
@@ -1895,9 +1892,12 @@ Shortest intron into three_prime_utr part    5
 Bye Bye.
 ```
 
-```
-[kevin_wong1@n063 Prus]$ module load AGAT/0.8.1-foss-2020b
-[kevin_wong1@n063 Prus]$ agat_sp_statistics.pl --gff Prus_gene_prediction.gff
+
+#### Porites rus
+
+`agat_sp_statistics.pl --gff Prus_gene_prediction.gff`
+
+```bash
 Reading file Prus_gene_prediction.gff
 Parsing: 100% [======================================================]D 0h01m13sParsing Finished
 Compute statistics
@@ -1997,9 +1997,13 @@ Shortest intron into exon part               20
 
 --------------------------------------------------------------------------------
 ```
-```
-[kevin_wong1@n064 Paus]$ module load AGAT/0.8.1-foss-2020b
-[kevin_wong1@n064 Paus]$ agat_sp_statistics.pl --gff paus_mRNA.gff
+
+
+#### Porites australiensis
+
+`agat_sp_statistics.pl --gff paus_mRNA.gff`
+
+```bash
 Reading file paus_mRNA.gff
 Parsing: 100% [======================================================]D 0h03m03sParsing Finished
 Compute statistics
