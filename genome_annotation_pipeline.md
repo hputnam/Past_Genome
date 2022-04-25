@@ -6,31 +6,34 @@
 
 *Initial MAKER Analysis*
 
-1. [MAKER Round 1](#1.-MAKER-Round-1)
+1. [MAKER Round 1](https://github.com/hputnam/Past_Genome/blob/master/genome_annotation_pipeline.md#1-maker-round-1)
 
 *Training gene prediction software*
 
-2. [SNAP Round 1](#2.-SNAP-Round-1)
+2. [SNAP Round 1](https://github.com/hputnam/Past_Genome/blob/master/genome_annotation_pipeline.md#2-snap-round-1)
 
-3. [AUGUSTUS Round 1](#3.-AUGUSTUS-Round-1)
+3. [AUGUSTUS Round 1](https://github.com/hputnam/Past_Genome/blob/master/genome_annotation_pipeline.md#3-augustus-round-1)
 
 *MAKER with Ab Initio gene predictors*
 
-4. [MAKER Round 2](#4.-MAKER-Round-2)
+4. [MAKER Round 2](https://github.com/hputnam/Past_Genome/blob/master/genome_annotation_pipeline.md#4-maker-round-2)
 
 *Iteratively running MAKER to improve annotation*
 
-5. [SNAP Round 2](#4.-SNAP-Round-2)
+5. [SNAP Round 2](https://github.com/hputnam/Past_Genome/blob/master/genome_annotation_pipeline.md#5-snap-round-2)
 
-6. [AUGUSTUS Round 2](#6.-AUGUSTUS-Round-2)
+6. [AUGUSTUS Round 2](https://github.com/hputnam/Past_Genome/blob/master/genome_annotation_pipeline.md#6-augustus-round-2)
 
-7. [MAKER Round 3](#7.-MAKER-Round-3)
+7. [MAKER Round 3](https://github.com/hputnam/Past_Genome/blob/master/genome_annotation_pipeline.md#7-maker-round-3)
+
+*Assessing completeness*
 
 8. [BUSCO](#8.-BUSCO)
 
 
 ### Functional Annotation
 
+1. BLAST the protein sequences against Swiss-Prot
 
 
 ## 1. MAKER Round 1
@@ -1027,7 +1030,7 @@ grep -c ">" Pastreoides_proteins_v1.fasta
 * Number of proteins in fasta file: 64636
 
 
-### BUSCO
+## 8. BUSCO
 
 #### Transcripts
 
