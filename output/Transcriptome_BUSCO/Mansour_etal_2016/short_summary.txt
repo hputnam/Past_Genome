@@ -1,0 +1,18 @@
+# BUSCO version is: 5.2.2 
+# The lineage dataset is: metazoa_odb10 (Creation date: 2020-09-10, number of genomes: 65, number of BUSCOs: 954)
+# Summarized benchmarking in BUSCO notation for file /data/putnamlab/kevin_wong1/REFS/Past_Mansour/p_ast2016.fasta
+# BUSCO was run in mode: transcriptome
+
+	***** Results: *****
+
+	C:30.3%[S:18.1%,D:12.2%],F:4.9%,M:64.8%,n:954	   
+	289	Complete BUSCOs (C)			   
+	173	Complete and single-copy BUSCOs (S)	   
+	116	Complete and duplicated BUSCOs (D)	   
+	47	Fragmented BUSCOs (F)			   
+	618	Missing BUSCOs (M)			   
+	954	Total BUSCO groups searched		   
+
+Dependencies and versions:
+	hmmsearch: 3.3
+	metaeuk: GITDIR-NOTFOUND

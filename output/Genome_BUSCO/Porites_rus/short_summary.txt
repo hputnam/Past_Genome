@@ -1,0 +1,19 @@
+# BUSCO version is: 5.2.2 
+# The lineage dataset is: metazoa_odb10 (Creation date: 2020-09-10, number of genomes: 65, number of BUSCOs: 954)
+# Summarized benchmarking in BUSCO notation for file /data/putnamlab/kevin_wong1/Past_Genome/refs/GCA_900290455.1_Prus_genomic.fna
+# BUSCO was run in mode: genome
+# Gene predictor used: metaeuk
+
+	***** Results: *****
+
+	C:67.8%[S:65.5%,D:2.3%],F:18.7%,M:13.5%,n:954	   
+	647	Complete BUSCOs (C)			   
+	625	Complete and single-copy BUSCOs (S)	   
+	22	Complete and duplicated BUSCOs (D)	   
+	178	Fragmented BUSCOs (F)			   
+	129	Missing BUSCOs (M)			   
+	954	Total BUSCO groups searched		   
+
+Dependencies and versions:
+	hmmsearch: 3.3
+	metaeuk: GITDIR-NOTFOUND

@@ -465,3 +465,24 @@ echo "BUSCO Mission complete!" $(date)
         146     Missing BUSCOs (M)                         
         954     Total BUSCO groups searched   
 ```
+
+
+Exporting all  BUSCO summary files to local computer.
+
+```
+scp kevin_wong1@ssh3.hac.uri.edu:'/data/putnamlab/kevin_wong1/Past_Genome/BUSCO_Compare/genomes/Past_BUSCO/run_metazoa_odb10/*.t*' /Users/kevinwong/MyProjects/Past_Genome/output/Genome_BUSCO/Porites_astreoides/
+
+scp kevin_wong1@ssh3.hac.uri.edu:'/data/putnamlab/kevin_wong1/Past_Genome/BUSCO_Compare/genomes/Paus_BUSCO/run_metazoa_odb10/*.t*' /Users/kevinwong/MyProjects/Past_Genome/output/Genome_BUSCO/Porites_australiensis/
+
+scp kevin_wong1@ssh3.hac.uri.edu:'/data/putnamlab/kevin_wong1/Past_Genome/BUSCO_Compare/genomes/Prus_BUSCO/run_metazoa_odb10/*.t*' /Users/kevinwong/MyProjects/Past_Genome/output/Genome_BUSCO/Porites_rus/
+
+scp kevin_wong1@ssh3.hac.uri.edu:'/data/putnamlab/kevin_wong1/Past_Genome/BUSCO_Compare/genomes/Plut_BUSCO/run_metazoa_odb10/*.t*' /Users/kevinwong/MyProjects/Past_Genome/output/Genome_BUSCO/Porites_lutea/
+
+scp kevin_wong1@ssh3.hac.uri.edu:'/data/putnamlab/kevin_wong1/Past_Genome/BUSCO_Compare/transcriptomes/Wong_BUSCO/run_metazoa_odb10/*.t*' /Users/kevinwong/MyProjects/Past_Genome/output/Transcriptome_BUSCO/Wong_Putnam_2022/
+
+scp kevin_wong1@ssh3.hac.uri.edu:'/data/putnamlab/kevin_wong1/Past_Genome/BUSCO_Compare/transcriptomes/Walker_BUSCO/run_metazoa_odb10/*.t*' /Users/kevinwong/MyProjects/Past_Genome/output/Transcriptome_BUSCO/Walker_etal_2019/
+
+scp kevin_wong1@ssh3.hac.uri.edu:'/data/putnamlab/kevin_wong1/Past_Genome/BUSCO_Compare/transcriptomes/Mansour_BUSCO/run_metazoa_odb10/*.t*' /Users/kevinwong/MyProjects/Past_Genome/output/Transcriptome_BUSCO/Mansour_etal_2016/
+
+scp kevin_wong1@ssh3.hac.uri.edu:'/data/putnamlab/kevin_wong1/Past_Genome/BUSCO_Compare/transcriptomes/Kenkel_BUSCO/run_metazoa_odb10/*.t*' /Users/kevinwong/MyProjects/Past_Genome/output/Transcriptome_BUSCO/Kenkel_etal_2013/
+```
